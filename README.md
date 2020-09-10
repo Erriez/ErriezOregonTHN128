@@ -3,17 +3,46 @@
 
 This is a transmit/receive library Arduino library with the Oregon THN128 433MHz wireless protocol.
 
-Tested on an Arduino UNO.
+Tested on an Arduino UNO and pro-micro 3.3V 8MHz.
 
 ![Oregon THN128](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png)
 
+## Transmit / receive hardware
 
-## Protocol
+This library is optimized for low-power Arduino ATMega328 microcontroller. Other targets are not supported.
+
+![Transmit and receive hardware](extras/transmit-receive-hardware.png)
+
+**Temperature transmitter on the left breadboard:** 
+
+* Pro-Mini 3V3 8MHz (with FTDI232 - USB serial interface).
+* Genuine DS18B20 temperature sensor.
+  STX802 low-power 433MHz transmitter.
+
+**Receiver on on the right breadboard:**
+
+* SRX882 low-power 433MHz receiver.
+* SSD1306 I2C 128x64 OLED display.
+* Pro-Mini 3V3 8MHz (with FTDI232 - USB serial interface).
+
+### Hardware notes
+
+* 1 to 3 temperature transmitters are supported, similar to the original Oregon THN128 temperature transmitters.
+* Check [list of counterfeit DS18B20 chips](https://github.com/cpetrich/counterfeit_DS18B20) , because this makes a huge difference in accuracy and read errors at 3.3V. Many DS18B20 chips from Aliexpress are counterfeit and won't work reliable at voltages below 3.3V.
+
+* [NiceRF Wireless Technology Co., Ltd.](https://nl.aliexpress.com/store/934254) sells high quality 433MHz transmit (STX802) and receiver modules (STX882) with a good range.
+* The Pro-Mini 3V3 8MHz is a good low-power Arduino boards after desoldering the power LED. A transmitter with 18650 battery can operate for at least 6 months with `LowPower.h` functionality implemented. (By sending the temperature every 30 seconds)
+* Changing the BOD (Brown Out Detection) fuse to 1.8V allows operation between 1.8 and 4.2V 18650 battery. 
+* A 18650 battery (with protection circuit) should be connected directly to the VCC pin (not VIN). 
+* The voltage regulator can be desoldered from the pro-micro board when not used for more power reduction.
+
+## Oregon Protocol
+
+A packet is sent twice:
 
 ![Oregon THN128 Protocol](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Protocol.png)
 
-
-## Data
+Data (see header file [ErriezOregonTHN128Receive.h](https://github.com/Erriez/ErriezOregonTHN128/blob/master/src/ErriezOregonTHN128Receive.h)):
 
 ![Oregon THN128 Temperature 16.6](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Temperature16.6.png)
 
