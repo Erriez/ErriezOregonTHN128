@@ -21,6 +21,7 @@ function autobuild()
     platformio lib --global install "Low-Power"
     platformio lib --global install https://github.com/arduino-libraries/SD
     platformio lib --global install "OneWire"
+    platformio lib --global install "DallasTemperature"
     platformio lib --global install "adafruit/Adafruit GFX Library"
     platformio lib --global install "adafruit/Adafruit SSD1306"
     platformio lib --global install "adafruit/Adafruit BusIO"
