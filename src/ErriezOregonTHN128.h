@@ -57,7 +57,9 @@ extern "C" {
 #define T_BIT_LONG_MIN      ((T_BIT_US * 2) - T_RX_TOLERANCE_US)
 #define T_BIT_LONG_MAX      ((T_BIT_US * 2) + T_RX_TOLERANCE_US)
 
-/* Data structure */
+/*!
+ * \brief Data structure
+ */
 typedef struct {
     uint32_t rawData;           /*!< Raw data */
     uint8_t rollingAddress;     /*!< Rolling address */
