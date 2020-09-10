@@ -2,20 +2,19 @@
 
 This is a transmit/receive library Arduino library with the Oregon THN128 433MHz wireless protocol.
 
- ![OregonTHN128](D:\Arduino\libraries\ErriezOregonTHN128\extras\OregonTHN128.png)
+Tested on an Arduino UNO.
 
+![Oregon THN128](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png)
 
 
 ## Protocol
 
-![OregonTHN128Protocol](D:\Arduino\libraries\ErriezOregonTHN128\extras\OregonTHN128Protocol.png)
-
+![Oregon THN128 Protocol](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Protocol.png)
 
 
 ## Data
 
-![OregonTHN128Temperature16.6](D:\Arduino\libraries\ErriezOregonTHN128\extras\OregonTHN128Temperature16.6.png)
-
+![Oregon THN128 Temperature 16.6](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Temperature16.6.png)
 
 
 ## Example low power receive
@@ -154,4 +153,3 @@ void loop()
     LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
 }
 ```
-

@@ -1,0 +1,34 @@
+#######################################
+# Syntax Coloring Map For Erriez Oregon THN128 library
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+OregonTHN128_TxBegin	KEYWORD2
+OregonTHN128_TxRawData	KEYWORD2
+OregonTHN128_Transmit	KEYWORD2
+
+OregonTHN128_RxBegin	KEYWORD2
+OregonTHN128_RxEnable	KEYWORD2
+OregonTHN128_RxDisable	KEYWORD2
+OregonTHN128_Available	KEYWORD2
+OregonTHN128_GetRawData	KEYWORD2
+OregonTHN128_Read	KEYWORD2
+
+OregonTHN128_CheckCRC	KEYWORD2
+OregonTHN128_TempToString	KEYWORD2
+OregonTHN128_DataToRaw	KEYWORD2
+OregonTHN128_RawToData	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################

@@ -43,7 +43,6 @@ extern "C" {
 
 void OregonTHN128_TxBegin(uint8_t rfTxPin);
 void OregonTHN128_TxRawData(uint32_t rawData);
-void OregonTHN128_TxTemperature(OregonTHN128Data_t *data);
 void OregonTHN128_Transmit(OregonTHN128Data_t *data);
 
 #ifdef __cplusplus

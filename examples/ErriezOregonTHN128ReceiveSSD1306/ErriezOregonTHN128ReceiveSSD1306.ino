@@ -26,6 +26,7 @@
 #include <LowPower.h>
 #include <ErriezOregonTHN128Receive.h>
 #include <Wire.h>
+#include <Adafruit_I2CDevice.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Fonts/FreeSerif9pt7b.h>
@@ -263,7 +264,7 @@ void setup()
 {
     // Initialize serial port
     Serial.begin(115200);
-    Serial.println(F("Oregon THN128 433MHz temperature receive"));
+    Serial.println(F("\nErriez Oregon THN128 433MHz temperature receive"));
 
     // Turn LED on
     pinMode(LED_BUILTIN, OUTPUT);

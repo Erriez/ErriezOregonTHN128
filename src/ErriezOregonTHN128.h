@@ -59,11 +59,11 @@ extern "C" {
 
 /* Data structure */
 typedef struct {
-    uint32_t rawData;
-    uint8_t rollingAddress;
-    uint8_t channel;
-    int16_t temperature;
-    bool lowBattery;
+    uint32_t rawData;           /*!< Raw data */
+    uint8_t rollingAddress;     /*!< Rolling address */
+    uint8_t channel;            /*!< Channel */
+    int16_t temperature;        /*!< Temperature */
+    bool lowBattery;            /*!< Low battery indication */
 } OregonTHN128Data_t;
 
 /* Public functions */

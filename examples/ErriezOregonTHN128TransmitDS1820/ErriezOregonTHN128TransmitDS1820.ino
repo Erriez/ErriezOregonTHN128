@@ -110,7 +110,7 @@ void setup()
 {
     // Initialize serial
     Serial.begin(115200);
-    Serial.println(F("Oregon THN128 433MHz DS1820 temperature transmit"));
+    Serial.println(F("\nErriez Oregon THN128 433MHz DS1820 temperature transmit"));
 
     // Initialize built-in LED
     pinMode(LED_BUILTIN, OUTPUT);
