@@ -3,13 +3,12 @@
 
 This is a transmit/receive library Arduino library with the Oregon THN128 433MHz wireless protocol.
 
-Tested on an Arduino UNO and pro-micro 3.3V 8MHz.
-
 ![Oregon THN128](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png)
 
 ## Transmit / receive hardware
 
-This library is optimized for low-power Arduino ATMega328 microcontroller. Other targets are not supported.
+This library is optimized for low-power ATMega328 microcontroller (AVR architecture). 
+This microcontroller is available on Arduino UNO and pro-micro 3.3V 8MHz boards. Other targets are not tested.
 
 ![Transmit and receive hardware](extras/transmit-receive-hardware.png)
 
@@ -17,7 +16,7 @@ This library is optimized for low-power Arduino ATMega328 microcontroller. Other
 
 * Pro-Mini 3V3 8MHz (with FTDI232 - USB serial interface).
 * Genuine DS18B20 temperature sensor.
-  STX802 low-power 433MHz transmitter.
+* STX802 low-power 433MHz transmitter.
 
 **Receiver on on the right breadboard:**
 
