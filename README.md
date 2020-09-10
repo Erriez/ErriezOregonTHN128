@@ -1,4 +1,5 @@
 # Oregon THN128 433MHz temperature sensor transmit/receive library for Arduino
+[![Build Status](https://travis-ci.org/Erriez/ErriezOregonTHN128.svg?branch=master)](https://travis-ci.org/Erriez/ErriezOregonTHN128)
 
 This is a transmit/receive library Arduino library with the Oregon THN128 433MHz wireless protocol.
 
