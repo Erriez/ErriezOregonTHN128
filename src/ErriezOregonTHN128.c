@@ -34,26 +34,41 @@
 #include <stdio.h>
 #include "ErriezOregonTHN128.h"
 
-/* Bit data macro's */
+/*!
+ * \defgroup Bit data macro's
+ * @{
+ */
+/*! Set rolling address */
 #define SET_ROL_ADDR(x)     (((x) & 0x07) << 0)
+/*! Get rolling address */
 #define GET_ROL_ADDR(x)     (((x) & 0x07) << 0)
 
+/*! Set channel */
 #define SET_CHANNEL(x)      ((((x) - 1) & 0x03) << 6)
+/*! Get channel */
 #define GET_CHANNEL(x)      ((((x) >> 6) & 0x03) + 1)
 
+/*! Set temperature */
 #define SET_TEMP(x)         ((((((uint32_t)(x) / 100) % 10)) << 16) | \
                             ((((uint32_t)(x) / 10) % 10) << 12) | \
                             (((x) % 10) << 8))
+/*! Get temperature */
 #define GET_TEMP(x)         (((((x) >> 16) & 0x0f) * 100) + \
                             ((((x) >> 12) & 0x0f) * 10) + \
                             (((x) >> 8) & 0x0f))
 
+/*! Sign bit */
 #define SIGN_BIT            (1UL << 21)
 
+/*! Low battery bit */
 #define LOW_BAT_BIT         (1UL << 23)
 
+/*! Set CRC */
 #define SET_CRC(x)          ((uint32_t)(x) << 24)
+/*! Get CRC */
 #define GET_CRC(x)          ((x) >> 24)
+
+/*! @} */
 
 
 /*!

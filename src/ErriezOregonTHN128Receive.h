@@ -98,7 +98,6 @@ void OregonTHN128_RxBegin(uint8_t extIntPin);
 void OregonTHN128_RxEnable();
 void OregonTHN128_RxDisable();
 bool OregonTHN128_Available(void);
-uint32_t OregonTHN128_GetRawData();
 bool OregonTHN128_Read(OregonTHN128Data_t *data);
 
 #ifdef __cplusplus

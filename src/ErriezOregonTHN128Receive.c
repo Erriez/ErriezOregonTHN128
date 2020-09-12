@@ -35,12 +35,15 @@
 
 #include "ErriezOregonTHN128Receive.h"
 
+/*!
+ * \brief Receive state
+ */
 typedef enum {
-    StateSearchSync = 0,
-    StateMid0 = 1,
-    StateMid1 = 2,
-    StateEnd = 3,
-    StateRxComplete = 4
+    StateSearchSync = 0,    /*!< Search for sync */
+    StateMid0 = 1,          /*!< Sample at the middle of a pulse part 1 */
+    StateMid1 = 2,          /*!< Sample at the middle of a pulse part 2 */
+    StateEnd = 3,           /*!< Sample at the end of a pulse to store bit */
+    StateRxComplete = 4     /*!< Receive complete */
 } RxState_t;
 
 /* Static variables */
@@ -58,6 +61,9 @@ static volatile RxState_t _rxState = StateSearchSync;
 void rfPinChange(void);
 
 
+/*!
+ * \brief Receive enable
+ */
 static void rxEnable()
 {
     /* Enable INTx change interrupt */
@@ -67,12 +73,28 @@ static void rxEnable()
     _rxState = StateSearchSync;
 }
 
+/*!
+ * \brief Receive disable
+ */
 static void rxDisable()
 {
     /* Disable INTx change interrupt */
     detachInterrupt(_rxInt);
 }
 
+/*!
+ * \brief Check is pulse duration is within range
+ * \param tPulse
+ *      Measured pulse length in us
+ * \param tMin
+ *      Minimum pulse length in us
+ * \param tMax
+ *      Maximum pulse length in us
+ * \retval true
+ *      Pulse is in range
+ * \retval false
+ *      Pulse not in range
+ */
 static bool isPulseInRange(uint16_t tPulse, uint16_t tMin, uint16_t tMax)
 {
     /* Check is pulse length between min and max time */
@@ -83,6 +105,13 @@ static bool isPulseInRange(uint16_t tPulse, uint16_t tMin, uint16_t tMax)
     }
 }
 
+/*!
+ * \brief Find synchronisation
+ * \retval true
+ *      Sync found
+ * \retval false
+ *      Sync not found
+ */
 static bool findSync()
 {
     /* Read sync pulse */
@@ -103,6 +132,12 @@ static bool findSync()
     return false;
 }
 
+/*!
+ * \brief Store a logical bit 1 or 0
+ * \param one
+ *      true: Bit 1\n
+ *      false: Bit 0
+ */
 static void storeBit(bool one)
 {
     /* Store received bit */
@@ -123,6 +158,9 @@ static void storeBit(bool one)
     }
 }
 
+/*!
+ * \brief Handle pulse RF receive pin
+ */
 static void handlePulse()
 {
     if (isPulseInRange(_tPinHigh, T_BIT_SHORT_MIN, T_BIT_SHORT_MAX)) {
@@ -146,6 +184,9 @@ static void handlePulse()
     }
 }
 
+/*!
+ * \brief Handle space RF receive pin
+ */
 static void handleSpace()
 {
     /* State machine */
@@ -170,6 +211,9 @@ static void handleSpace()
     }
 }
 
+/*!
+ * \brief RF pin level change
+ */
 void rfPinChange(void)
 {
     uint32_t tNow;
@@ -223,6 +267,12 @@ void rfPinChange(void)
 /*------------------------------------------------------------------------------------------------*/
 /*                                     Public functions                                           */
 /*------------------------------------------------------------------------------------------------*/
+/*!
+ * \brief Initialize receiver pin
+ * \details
+ *      Connect RX pin to an external interrupt pin such as INT0 (D2) or INT1 (D3)
+ * \param extIntPin
+ */
 void OregonTHN128_RxBegin(uint8_t extIntPin)
 {
     /* Save interrupt number of the RF pin */
@@ -235,24 +285,46 @@ void OregonTHN128_RxBegin(uint8_t extIntPin)
     rxEnable();
 }
 
+/*!
+ * \brief Receive enable
+ */
 void OregonTHN128_RxEnable()
 {
     /* Enable receive */
     rxEnable();
 }
 
+/*!
+ * \brief Receive disable
+ */
 void OregonTHN128_RxDisable()
 {
     /* Disable receive */
     rxDisable();
 }
 
+/*!
+ * \brief Check if data received
+ * \retval true
+ *      Data received
+ * \retval false
+ *      No data available
+ */
 bool OregonTHN128_Available()
 {
     /* Return receive complete */
     return (_rxState == StateRxComplete) ? true : false;
 }
 
+/*!
+ * \brief Read data
+ * \param data
+ *      Structure OregonTHN128Data_t output
+ * \retval true
+ *      Data received
+ * \retval false
+ *      No data available
+ */
 bool OregonTHN128_Read(OregonTHN128Data_t *data)
 {
     if (OregonTHN128_Available()) {

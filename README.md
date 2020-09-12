@@ -195,7 +195,6 @@ void loop()
     OregonTHN128_Transmit(&data);
 
     // Wait ~30 seconds before sending next temperature
-    Serial.flush();
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);

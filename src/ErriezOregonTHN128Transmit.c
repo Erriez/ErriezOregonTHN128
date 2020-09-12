@@ -42,19 +42,48 @@ extern void delay100ms(void);
 static int8_t _rfTxPort = -1;
 static int8_t _rfTxBit = -1;
 
-/* Optimized RF transmit pin macro's */
+/*!
+ * \defgroup Transmit pin control
+ * \details
+ *      Optimized for AVR microcontrollers
+ * @{
+ */
+
+/*!
+ * \def RF_TX_PIN_INIT(rfTxPin)
+ * \brief Initialize RF transmit pin
+ * \param rfTxPin
+ *      TX pin to external interrupt pin (INT0 or INT1)
+ */
 #define RF_TX_PIN_INIT(rfTxPin)        {            \
     _rfTxPort = digitalPinToPort(rfTxPin);          \
     _rfTxBit = digitalPinToBitMask(rfTxPin);        \
     *portModeRegister(_rfTxPort) |= _rfTxBit;       \
 }
+
+/*!
+ * \def RF_TX_PIN_DISABLE()
+ * \brief TX pin disable
+ */
 #define RF_TX_PIN_DISABLE()             {           \
     if ((_rfTxPort >= 0) && (_rfTxBit >= 0)) {      \
         *portModeRegister(_rfTxPort) &= ~_rfTxBit;  \
     }                                               \
 }
+
+/*!
+ * \def RF_TX_PIN_HIGH()
+ * \brief TX pin high
+ */
 #define RF_TX_PIN_HIGH()        { *portOutputRegister(_rfTxPort) |= _rfTxBit; }
+
+/*!
+ * \def RF_TX_PIN_LOW()
+ * \brief TX pin low
+ */
 #define RF_TX_PIN_LOW()         { *portOutputRegister(_rfTxPort) &= ~_rfTxBit; }
+
+/*! @} */
 
 
 /*!
@@ -132,6 +161,8 @@ static void txData(uint32_t data)
 /*------------------------------------------------------------------------------------------------*/
 /*!
  * \brief Transmit begin
+ * \details
+ *      Connect rfTxPin to any DIGITAL pin
  * \param rfTxPin
  *      Arduino transmit pin
  */

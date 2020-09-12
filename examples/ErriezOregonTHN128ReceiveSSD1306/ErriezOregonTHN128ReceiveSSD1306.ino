@@ -293,7 +293,6 @@ void loop()
 {
     char line[10];
     char tempStr[5];
-
     OregonTHN128Data_t data;
 
     // Check temperature received

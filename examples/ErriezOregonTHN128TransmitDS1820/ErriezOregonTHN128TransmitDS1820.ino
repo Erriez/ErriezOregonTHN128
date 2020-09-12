@@ -32,6 +32,7 @@
 #define RF_TX_PIN           3
 #define ONE_WIRE_BUS        2
 
+// Create OneWire and DS1820 objects
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature ds1820(&oneWire);
 
