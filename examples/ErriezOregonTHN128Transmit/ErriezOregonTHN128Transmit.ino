@@ -68,9 +68,10 @@ static void printData()
     data.rawData = OregonTHN128_DataToRaw(&data);
 
     OregonTHN128_TempToString(temperatureStr, sizeof(temperatureStr), data.temperature);
-    snprintf(msg, sizeof(msg), "TX %lu: Rol: %d, Channel %d, Temp: %s, Low batt: %d (0x%08lX)",
-             txCount++,
-             data.rollingAddress, data.channel, temperatureStr, data.lowBattery, data.rawData);
+    snprintf_P(msg, sizeof(msg),
+               PSTR("TX %lu: Rol: %d, Channel %d, Temp: %s, Low batt: %d (0x%08lX)"),
+               txCount++,
+               data.rollingAddress, data.channel, temperatureStr, data.lowBattery, data.rawData);
     Serial.println(msg);
 }
 
