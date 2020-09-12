@@ -26,13 +26,13 @@
 #include <LowPower.h>
 #include <ErriezOregonTHN128Transmit.h>
 
-// Pin defines
-#define RF_TX_PIN           9
+// Pin defines (Any DIGITAL pin)
+#define RF_TX_PIN           3
 
 OregonTHN128Data_t data = {
     .rawData = 0,           // Raw data filled in by driver
     .rollingAddress = 5,    // Rolling address 0..7
-    .channel = 2,           // Channel 1, 2 or 3
+    .channel = 1,           // Channel 1, 2 or 3
     .temperature = 0,       // Temperature -99.9 .. 99.9 multiplied by 10
     .lowBattery = false,
 };
@@ -45,6 +45,7 @@ extern "C" {
 // Function is called from library
 void delay100ms()
 {
+    // Blink LED within 100ms space between two packets
     Serial.flush();
     digitalWrite(LED_BUILTIN, HIGH);
     LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);

@@ -28,8 +28,8 @@
 #include <DallasTemperature.h>
 #include <ErriezOregonTHN128Transmit.h>
 
-// Pin defines
-#define RF_TX_PIN           9
+// Pin defines (Any DIGITAL pin)
+#define RF_TX_PIN           3
 #define ONE_WIRE_BUS        2
 
 OneWire oneWire(ONE_WIRE_BUS);
@@ -38,7 +38,7 @@ DallasTemperature ds1820(&oneWire);
 OregonTHN128Data_t data = {
         .rawData = 0,           // Raw data filled in by driver
         .rollingAddress = 5,    // Rolling address 0..7
-        .channel = 2,           // Channel 1, 2 or 3
+        .channel = 1,           // Channel 1, 2 or 3
         .temperature = 0,       // Temperature -99.9 .. 99.9 multiplied by 10
         .lowBattery = false,
 };

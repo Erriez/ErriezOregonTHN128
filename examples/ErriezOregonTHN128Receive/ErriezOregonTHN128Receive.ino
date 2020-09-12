@@ -26,7 +26,7 @@
 #include <LowPower.h>
 #include <ErriezOregonTHN128Receive.h>
 
-// RF pin 2 (INT0) or pin 3 (INT1) defines
+// Connect RF receive to Arduino pin 2 (INT0) or pin 3 (INT1)
 #define RF_RX_PIN     2
 
 
@@ -71,7 +71,8 @@ void loop()
 
     // Check temperature received
     if (OregonTHN128_Available()) {
-        digitalWrite(LED_BUILTIN, LOW);
+        // Turn LED on
+        digitalWrite(LED_BUILTIN, HIGH);
 
         // Read temperature
         OregonTHN128_Read(&data);
@@ -86,7 +87,8 @@ void loop()
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
         LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
 
-        digitalWrite(LED_BUILTIN, HIGH);
+        // Turn LED off
+        digitalWrite(LED_BUILTIN, LOW);
 
         // Enable receive
         OregonTHN128_RxEnable();

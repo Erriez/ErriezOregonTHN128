@@ -52,7 +52,7 @@ Data (see header file [ErriezOregonTHN128Receive.h](https://github.com/Erriez/Er
 #include <LowPower.h>
 #include <ErriezOregonTHN128Receive.h>
 
-// RF pin 2 (INT0) or pin 3 (INT1) defines
+// Connect RF receive to Arduino pin 2 (INT0) or pin 3 (INT1)
 #define RF_RX_PIN     2
 
 
@@ -130,15 +130,15 @@ void loop()
 #include <LowPower.h>
 #include <ErriezOregonTHN128Transmit.h>
 
-// Pin defines
-#define RF_TX_PIN           9
+// Pin defines (Any DIGITAL pin)
+#define RF_TX_PIN           3
 
 OregonTHN128Data_t data = {
     .rawData = 0,           // Raw data filled in by library
     .rollingAddress = 5,    // Rolling address 0..7
     .channel = 1,           // Channel 1, 2 or 3
-    .temperature = 0,     	// Temperature -99.9 .. 99.9 multiplied by 10
-    .lowBattery = false,	// Low battery true or false
+    .temperature = 0,       // Temperature -99.9 .. 99.9 multiplied by 10
+    .lowBattery = false,    // Low battery true or false
 };
 
 #ifdef __cplusplus
@@ -148,11 +148,12 @@ extern "C" {
 // Function is called from library
 void delay100ms()
 {
-    Serial.flush();
+    // Blink LED within 100ms space between two packets
     digitalWrite(LED_BUILTIN, HIGH);
-    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
     digitalWrite(LED_BUILTIN, LOW);
-    LowPower.powerDown(SLEEP_30MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
 }
 
 #ifdef __cplusplus
@@ -161,6 +162,10 @@ void delay100ms()
 
 void setup()
 {
+    // Initialize built-in LED
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+
     // Initialize pins
     OregonTHN128_TxBegin(RF_TX_PIN);
 }
