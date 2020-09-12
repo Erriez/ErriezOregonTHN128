@@ -81,12 +81,15 @@ void loop()
         // Print received data
         printReceivedData(&data);
 
-        // Wait ~30 seconds before receiving next temperature
+#if 0
+        // Wait ~30 seconds before receiving next temperature from one transmitter
+        // Works only when using one channel
         Serial.flush();
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
         LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
         LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
+#endif
 
         // Turn LED off
         digitalWrite(LED_BUILTIN, LOW);
