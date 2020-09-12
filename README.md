@@ -32,10 +32,10 @@ This microcontroller is available on Arduino UNO and `Pro Mini 3.3V 8MHz` boards
 * Changing the BOD (Brown Out Detection) fuse to 1.8V allows operation between 1.8 and 4.2V 18650 battery. (Explanation beyond the scope of this project)
 * 1 to 3 temperature transmitters are supported, similar to the original Oregon THN128 temperature transmitters.
 * Check [list of counterfeit DS18B20 chips](https://github.com/cpetrich/counterfeit_DS18B20) , because this makes a huge difference in accuracy and read errors at 3.3V. Many DS18B20 chips from Aliexpress are counterfeit and won't work reliable at voltages below 3.3V.
-
 * [NiceRF Wireless Technology Co., Ltd.](https://nl.aliexpress.com/store/934254) sells high quality 433MHz transmit (STX802) and receiver modules (STX882) with a good range.
 * A 18650 battery (with protection circuit) should be connected directly to the VCC pin (not VIN). 
 * The voltage regulator can be desoldered from the pro-micro board when not used for more power reduction.
+
 
 ## Oregon Protocol
 
@@ -137,9 +137,6 @@ void loop()
 ```
 
 
-
-
-
 ## Example low power transmit
 
 ```c++
@@ -190,7 +187,7 @@ void loop()
 {
     // Set temperature
     data.temperature = 123; //12.3`C
-    
+
     // Send temperature
     OregonTHN128_Transmit(&data);
 
