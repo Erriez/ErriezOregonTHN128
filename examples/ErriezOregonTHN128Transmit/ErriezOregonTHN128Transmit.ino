@@ -23,7 +23,7 @@
  */
 
 #include <Arduino.h>
-#include <LowPower.h>
+#include <LowPower.h> // https://github.com/LowPowerLab/LowPower
 #include <ErriezOregonTHN128Transmit.h>
 
 // Pin defines (Any DIGITAL pin)

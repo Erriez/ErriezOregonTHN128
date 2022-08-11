@@ -23,7 +23,7 @@
  */
 
 #include <Arduino.h>
-#include <LowPower.h>
+#include <LowPower.h> // https://github.com/LowPowerLab/LowPower
 #include <ErriezOregonTHN128Receive.h>
 
 // Connect RF receive to Arduino pin 2 (INT0) or pin 3 (INT1)
