@@ -26,7 +26,7 @@
 #define ERRIEZ_OREGON_THN128_H_
 
 /* Check platform */
-#if !defined(AVR)
+#if !defined(ARDUINO_ARCH_AVR) && !defined(ARDUINO_ARCH_ESP8266) && !defined(ARDUINO_ARCH_ESP32)
 #error "Platform not supported."
 #endif
 

@@ -89,6 +89,11 @@
 #include <stdint.h>
 #include "ErriezOregonTHN128.h"
 
+// Macro IRAM_ATTR is defined for ESP pin interrupts
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

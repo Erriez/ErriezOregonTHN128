@@ -23,14 +23,35 @@
  */
 
 #include <Arduino.h>
-#include <LowPower.h> // https://github.com/LowPowerLab/LowPower
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include <ErriezOregonTHN128Transmit.h>
+#include <OneWire.h>                    // https://github.com/PaulStoffregen/OneWire
+#include <DallasTemperature.h>          // https://github.com/milesburton/Arduino-Temperature-Control-Library
+#include <ErriezOregonTHN128Transmit.h> // https://github.com/Erriez/ErriezOregonTHN128
 
-// Pin defines (Any DIGITAL pin)
-#define RF_TX_PIN           3
-#define ONE_WIRE_BUS        2
+#if defined(ARDUINO_ARCH_AVR)
+
+#include <LowPower.h>           // https://github.com/LowPowerLab/LowPower
+#define ONE_WIRE_BUS        2   // Any DIGITAL pin
+#define RF_TX_PIN           3   // Any DIGITAL pin
+
+#elif defined(ARDUINO_ARCH_ESP8266)
+
+extern "C" {
+#include "user_interface.h"
+}
+
+#define ONE_WIRE_BUS        2   // NodeMCU D4
+#define RF_TX_PIN           4   // NodeMCU D2
+
+ADC_MODE(ADC_VCC);              // Set ADC in VCC read mode
+
+#elif defined(ARDUINO_ARCH_ESP32)
+
+#define ONE_WIRE_BUS        21
+#define RF_TX_PIN           22
+
+#else
+#error "May work, but not tested on this target"
+#endif
 
 // Create OneWire and DS1820 objects
 OneWire oneWire(ONE_WIRE_BUS);
@@ -45,27 +66,11 @@ OregonTHN128Data_t data = {
 };
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// Function is called from library
-void delay100ms()
+static bool isLowBatt()
 {
-    Serial.flush();
-    digitalWrite(LED_BUILTIN, HIGH);
-    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-    digitalWrite(LED_BUILTIN, LOW);
-    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-}
+    bool lowBatt = false;
 
-#ifdef __cplusplus
-}
-#endif
-
-static long readVcc()
-{
+#if defined(ARDUINO_ARCH_AVR)
 // Read 1.1V reference against AVcc
 // set the reference to Vcc and the measurement to the internal 1.1V reference
 #if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -88,12 +93,25 @@ static long readVcc()
     long result = (high<<8) | low;
 
     result = 1125300L / result; // Calculate Vcc (in mV); 1125300 = 1.1*1023*1000
-    return result; // Vcc in millivolts
+    if (result < 2850) {
+        lowBatt = true;
+    }
+
+#elif defined(ARDUINO_ARCH_ESP8266)
+    if (ESP.getVcc() < 2500) {
+        lowBatt = true;
+    }
+
+#else
+#warning "Todo: readVcc() not implemented yet"
+#endif
+
+    return lowBatt;
 }
 
 static void printData()
 {
-    static uint32_t txCount = 0;
+    static unsigned long txCount = 0;
     char temperatureStr[10];
     char msg[80];
 
@@ -103,7 +121,7 @@ static void printData()
     OregonTHN128_TempToString(temperatureStr, sizeof(temperatureStr), data.temperature);
     snprintf(msg, sizeof(msg), "TX %lu: Rol: %d, Channel %d, Temp: %s, Low batt: %d (0x%08lX)",
              txCount++,
-             data.rollingAddress, data.channel, temperatureStr, data.lowBattery, data.rawData);
+             data.rollingAddress, data.channel, temperatureStr, data.lowBattery, (unsigned long)data.rawData);
     Serial.println(msg);
 }
 
@@ -135,11 +153,7 @@ void loop()
     float temp;
 
     // Check battery voltage
-    if (readVcc() < 2850) {
-        data.lowBattery = true;
-    } else {
-        data.lowBattery = false;
-    }
+    data.lowBattery = isLowBatt();
 
     // Read temperature
     ds1820.requestTemperatures();
@@ -156,10 +170,29 @@ void loop()
     // Send temperature
     OregonTHN128_Transmit(&data);
 
+#if defined(ARDUINO_ARCH_AVR)
+    // Blink LED within 100ms space between two packets
+    Serial.flush();
+    digitalWrite(LED_BUILTIN, HIGH);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+    digitalWrite(LED_BUILTIN, LOW);
+    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+#else
+    delay(100);
+#endif
+
+    // Send temperature again
+    OregonTHN128_Transmit(&data);
+
     // Wait ~30 seconds before sending next temperature
+#if defined(ARDUINO_ARCH_AVR)
     Serial.flush();
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
+#else
+    delay(30 * 1000);
+#endif
 }

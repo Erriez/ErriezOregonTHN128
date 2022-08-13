@@ -23,16 +23,27 @@
  */
 
 #include <Arduino.h>
-#include <LowPower.h> // https://github.com/LowPowerLab/LowPower
-#include <ErriezOregonTHN128Receive.h>
+#include <ErriezOregonTHN128Receive.h>  // https://github.com/Erriez/ErriezOregonTHN128
 #include <Wire.h>
-#include <Adafruit_I2CDevice.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_I2CDevice.h>         // https://github.com/adafruit/Adafruit_BusIO
+#include <Adafruit_GFX.h>               // https://github.com/adafruit/Adafruit-GFX-Library
+#include <Adafruit_SSD1306.h>           // https://github.com/adafruit/Adafruit_SSD1306
 #include <Fonts/FreeSerif9pt7b.h>
 
-// Connect RF receive to Arduino pin 2 (INT0) or pin 3 (INT1)
-#define RF_RX_PIN     2
+#if defined(ARDUINO_ARCH_AVR)
+#include <LowPower.h>           // https://github.com/LowPowerLab/LowPower
+#define RF_RX_PIN           2   // Connect RF receive pin to Arduino pin 2 (INT0) or pin 3 (INT1)
+#elif defined(ARDUINO_ARCH_ESP8266)
+                                // GPIO5  NodeMCU D1 SCL
+                                // GPIO4  NodeMCU D2 SDA
+#define RF_RX_PIN           14  // GPIO14 NodeMCU D5
+#elif defined(ARDUINO_ARCH_ESP32)
+                                // GPIO22 SCL
+                                // GPIO21 SDA
+#define RF_RX_PIN           19  // GPIO19
+#else
+#error "May work, but not tested on this target"
+#endif
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -245,7 +256,7 @@ const GFXfont Lato_Black_24 PROGMEM = {
 void printReceivedData(OregonTHN128Data_t *data)
 {
     bool negativeTemperature = false;
-    static uint32_t rxCount = 0;
+    static unsigned long rxCount = 0;
     int16_t tempAbs;
     char msg[80];
 
@@ -260,7 +271,7 @@ void printReceivedData(OregonTHN128Data_t *data)
                rxCount++,
                data->rollingAddress, data->channel,
                (negativeTemperature ? "-" : ""), (tempAbs / 10), (tempAbs % 10), data->lowBattery,
-               data->rawData);
+               (unsigned long)data->rawData);
     Serial.println(msg);
 }
 

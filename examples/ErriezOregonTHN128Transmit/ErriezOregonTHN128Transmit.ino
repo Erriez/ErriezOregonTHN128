@@ -23,11 +23,18 @@
  */
 
 #include <Arduino.h>
-#include <LowPower.h> // https://github.com/LowPowerLab/LowPower
-#include <ErriezOregonTHN128Transmit.h>
+#include <ErriezOregonTHN128Transmit.h> // https://github.com/Erriez/ErriezOregonTHN128
 
-// Pin defines (Any DIGITAL pin)
-#define RF_TX_PIN           3
+#if defined(ARDUINO_ARCH_AVR)
+#include <LowPower.h>           // https://github.com/LowPowerLab/LowPower
+#define RF_TX_PIN           3   // Any DIGITAL pin
+#elif defined(ARDUINO_ARCH_ESP8266)
+#define RF_TX_PIN           4   // NodeMCU D2
+#elif defined(ARDUINO_ARCH_ESP32)
+#define RF_TX_PIN           22
+#else
+#error "May work, but not tested on this target"
+#endif
 
 OregonTHN128Data_t data = {
     .rawData = 0,           // Raw data filled in by driver
@@ -38,29 +45,9 @@ OregonTHN128Data_t data = {
 };
 
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// Function is called from library
-void delay100ms()
-{
-    // Blink LED within 100ms space between two packets
-    Serial.flush();
-    digitalWrite(LED_BUILTIN, HIGH);
-    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-    digitalWrite(LED_BUILTIN, LOW);
-    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-}
-
-#ifdef __cplusplus
-}
-#endif
-
 static void printData()
 {
-    static uint32_t txCount = 0;
+    static unsigned long txCount = 0;
     char temperatureStr[10];
     char msg[80];
 
@@ -71,7 +58,7 @@ static void printData()
     snprintf_P(msg, sizeof(msg),
                PSTR("TX %lu: Rol: %d, Channel %d, Temp: %s, Low batt: %d (0x%08lX)"),
                txCount++,
-               data.rollingAddress, data.channel, temperatureStr, data.lowBattery, data.rawData);
+               data.rollingAddress, data.channel, temperatureStr, data.lowBattery, (unsigned long)data.rawData);
     Serial.println(msg);
 }
 
@@ -103,10 +90,29 @@ void loop()
     // Send temperature
     OregonTHN128_Transmit(&data);
 
+#if defined(ARDUINO_ARCH_AVR)
+    // Blink LED within 100ms space between two packets
+    Serial.flush();
+    digitalWrite(LED_BUILTIN, HIGH);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+    digitalWrite(LED_BUILTIN, LOW);
+    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+#else
+    delay(100);
+#endif
+
+    // Send temperature again
+    OregonTHN128_Transmit(&data);
+
     // Wait ~30 seconds before sending next temperature
+#if defined(ARDUINO_ARCH_AVR)
     Serial.flush();
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
     LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
+#else
+    delay(30 * 1000);
+#endif
 }

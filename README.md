@@ -17,7 +17,7 @@ This microcontroller is available on Arduino UNO and `Pro Mini 3.3V 8MHz` boards
 * Genuine DS18B20 temperature sensor.
 * STX802 low-power 433MHz transmitter.
 
-**Receiver on on the right breadboard:**
+**Receiver on the right breadboard:**
 
 * SRX882 low-power 433MHz receiver.
 * SSD1306 I2C 128x64 OLED display.
@@ -25,13 +25,25 @@ This microcontroller is available on Arduino UNO and `Pro Mini 3.3V 8MHz` boards
 
 ### Hardware notes
 
-* For low-power transmitters, a `Pro Mini 3V3 8MHz` bare board with ATMega328 microcontroller is highly recommended. The board has no serial interface chip which reduces continuous power consumption. An external FTDI232 - USB serial interface  should be connected for serial console / programming. (See red PCB on the picture)
+Supported hardware:
+* AVR designed for low-power
+* ESP8266
+* ESP32
+
+* For low-power transmitters, a `Pro Mini 3V3 8MHz` bare board with ATMega328 microcontroller is highly recommended. The
+  board has no serial interface chip which reduces continuous power consumption. An external FTDI232 - USB serial 
+  interface  should be connected for serial console / programming. (See red PCB on the picture)
   The SMD power LED should be desoldered from the Pro Mini to reduce continuous power consumption. 
-* A transmitter with (protected) 1500mA 18650 battery can operate for at least 6 months with `LowPower.h` functionality implemented. (By sending the temperature every 30 seconds)
-* Changing the BOD (Brown Out Detection) fuse to 1.8V allows operation between 1.8 and 4.2V 18650 battery. (Explanation beyond the scope of this project)
+* A transmitter with (protected) 1500mA 18650 battery can operate for at least 6 months with `LowPower.h` functionality
+  implemented. (By sending the temperature every 30 seconds)
+* Changing the BOD (Brown Out Detection) fuse to 1.8V allows operation between 1.8 and 4.2V 18650 battery. (Explanation 
+  beyond the scope of this project)
 * 1 to 3 temperature transmitters are supported, similar to the original Oregon THN128 temperature transmitters.
-* Check [list of counterfeit DS18B20 chips](https://github.com/cpetrich/counterfeit_DS18B20) , because this makes a huge difference in accuracy and read errors at 3.3V. Many DS18B20 chips from Aliexpress are counterfeit and won't work reliable at voltages below 3.3V.
-* [NiceRF Wireless Technology Co., Ltd.](https://nl.aliexpress.com/store/934254) sells high quality 433MHz transmit (STX802) and receiver modules (STX882) with a good range.
+* Check [list of counterfeit DS18B20 chips](https://github.com/cpetrich/counterfeit_DS18B20) , because this makes a huge
+  difference in accuracy and read errors at 3.3V. Many DS18B20 chips from Aliexpress are counterfeit and won't work  
+  reliable at voltages below 3.3V.
+* [NiceRF Wireless Technology Co., Ltd.](https://nl.aliexpress.com/store/934254) sells high quality 433MHz transmit 
+  (STX802) and receiver modules (STX882) with a good range.
 * A 18650 battery (with protection circuit) should be connected directly to the VCC pin (not VIN). 
 * The voltage regulator can be desoldered from the pro-micro board when not used for more power reduction.
 
