@@ -209,3 +209,9 @@ void loop()
     LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
 }
 ```
+
+## Saleae Logic Analyzer
+
+![capture](extras/SaleaeLogicAnalyzer/RX_rol7_channel1_temp20.7_lowbat0.png)
+
+A [capture](extras/SaleaeLogicAnalyzer/RX_rol7_channel1_temp20.7_lowbat0.sal) from the Oregon THN128 can be opened with https://www.saleae.com/downloads/.
