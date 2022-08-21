@@ -22,8 +22,6 @@ on:
 env:
   # To use repository name: ${{ github.event.repository.name }}
   PDF_NAME: ${{ github.event.repository.name }}
-  # Branch name "master" or "main"
-  BRANCH_NAME: "master"
 
 jobs:
   build:
@@ -90,7 +88,7 @@ jobs:
         shell: bash
 
       - name: Generate Doxygen PDF
-        if: ${{ github.ref == 'refs/heads/$BRANCH_NAME' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           sudo apt-get install texlive-latex-recommended texlive-pictures texlive-latex-extra -y
           make -C docs/latex
@@ -98,7 +96,7 @@ jobs:
         shell: bash
 
       - name: Deploy to GitHub branch gh-pages
-        if: ${{ github.ref == 'refs/heads/$BRANCH_NAME' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
