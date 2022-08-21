@@ -1,0 +1,103 @@
+name: Github Actions CI
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+     branches:
+      - main
+  schedule:
+      # */2: even, */4: every 4
+      #      +--------------> minute (0 - 59)
+      #      | +------------> hour (0 - 23)
+      #      | | +----------> day of the month (1 - 31)
+      #      | | | +--------> month (1 - 12)
+      #      | | | |   +------> day of the week (0 - 6)
+      #      | | | |   |
+    - cron: "0 0 * */4 *"
+  # Run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        examples: [
+          examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino,
+          examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino,
+          examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino,
+          examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino
+        ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Install library dependencies
+        run: |
+          pio pkg install --global --library "Low-Power"
+          pio pkg install --global --library https://github.com/arduino-libraries/SD
+          pio pkg install --global --library "OneWire"
+          pio pkg install --global --library "DallasTemperature"
+          pio pkg install --global --library "adafruit/Adafruit GFX Library"
+          pio pkg install --global --library "adafruit/Adafruit SSD1306"
+          pio pkg install --global --library "adafruit/Adafruit BusIO"
+
+      - name: Build PlatformIO examples Arduino
+        run: pio ci -O "lib_ldf_mode=chain+" --lib="." --board=uno --board=pro16MHzatmega328 --board=nodemcuv2 --board lolin_d32
+        env:
+          PLATFORMIO_CI_SRC: ${{ matrix.examples }}
+
+  doxygen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: "true"
+
+      - name: Install Doxygen
+        run: sudo apt-get install doxygen graphviz -y
+        shell: bash
+
+      - name: Generate Doxygen HTML
+        run: doxygen Doxyfile
+        shell: bash
+
+      - name: Create .nojekyll (ensures pages with underscores work on gh pages)
+        run: touch docs/html/.nojekyll
+        shell: bash
+
+      - name: Generate Doxygen PDF
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          sudo apt-get install texlive-latex-recommended texlive-pictures texlive-latex-extra -y
+          make -C docs/latex
+          cp docs/latex/refman.pdf docs/html/$REPO_NAME.pdf
+        shell: bash
+
+      - name: Deploy to GitHub branch gh-pages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: docs/html

@@ -50,7 +50,7 @@ function setup_virtualenv()
 function autobuild()
 {
     # Set environment variables
-    BOARDS_AVR="--board uno --board pro16MHzatmega328 --board pro8MHzatmega328"
+    BOARDS_AVR="--board uno --board pro16MHzatmega328"
     BOARDS_ESP8266="--board d1_mini --board nodemcuv2"
     BOARDS_ESP32="--board lolin_d32"
 
