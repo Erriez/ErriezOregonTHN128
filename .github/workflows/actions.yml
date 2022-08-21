@@ -3,10 +3,10 @@ name: Github Actions CI
 on: 
   push:
     branches:
-      - main
+      - master
   pull_request:
      branches:
-      - main
+      - master
   schedule:
       # */2: even, */4: every 4
       #      +--------------> minute (0 - 59)
