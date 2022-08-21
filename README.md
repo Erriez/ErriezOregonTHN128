@@ -258,7 +258,7 @@ https://www.saleae.com/downloads/.
 ## Generated Arduino Library Doxygen Documentation
 
 * [Online Doxygen HTML](https://erriez.github.io/ErriezOregonTHN128/index.html)
-* [Doxygen PDF](https://github.com/Erriez/ErriezOregonTHN128/blob/gh-pages/ErriezTemplateLibrary.pdf)
+* [Doxygen PDF](https://github.com/Erriez/ErriezOregonTHN128/blob/gh-pages/ErriezOregonTHN128.pdf)
 
 ## MIT License
 
