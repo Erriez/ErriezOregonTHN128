@@ -1,7 +1,7 @@
 # End User Agreement
 
-In addition to the [MIT LICENSE](https://github.com/Erriez/ErriezOregonTHN128/blob/main/LICENSE) and
-[Code Of Conduct](https://github.com/Erriez/ErriezOregonTHN128/blob/main/CODE_OF_CONDUCT.md), 
+In addition to the [MIT LICENSE](https://github.com/Erriez/ErriezOregonTHN128/blob/master/LICENSE) and
+[Code Of Conduct](https://github.com/Erriez/ErriezOregonTHN128/blob/master/CODE_OF_CONDUCT.md), 
 developer Erriez defined this additional End User Agreement which is applicable to all users of 
 Erriez published projects.
 

@@ -27,7 +27,7 @@ community include:
 
 Examples of unacceptable behavior include:
 
-* Starting a WAR, see [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/main/END_USER_AGREEMENT.md)
+* Starting a WAR, see [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/master/END_USER_AGREEMENT.md)
 * Copying https://github.com/Erriez pages to internet archives such as Wayback Machine
 * The use of sexualized language or imagery, and sexual attention or
   advances of any kind
@@ -107,7 +107,7 @@ Violating these terms may lead to a permanent ban.
 
 ### 4. Permanent Ban
 
-**Community Impact**: Violating [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/main/END_USER_AGREEMENT.md), 
+**Community Impact**: Violating [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/master/END_USER_AGREEMENT.md), 
 Demonstrating a pattern of violation of community
 standards, including sustained inappropriate behavior,  harassment of an
 individual, or aggression toward or disparagement of classes of individuals.
