@@ -1,4 +1,9 @@
-# Oregon THN128 433MHz temperature sensor transmit/receive library for Arduino
+[![Licence MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Erriez/ErriezOregonTHN128/blob/main/LICENSE)
+[![Language C/C++](https://img.shields.io/badge/language-C%2FC%2B%2B-informational)](https://github.com/Erriez/ErriezOregonTHN128)
+[![Release tag](https://img.shields.io/github/v/release/Erriez/ErriezOregonTHN128?display_name=tag)](https://github.com/Erriez/ErriezOregonTHN128/releases)
+[![Open issue](https://shields.io/github/issues-raw/Erriez/ErriezOregonTHN128)](https://github.com/Erriez/ErriezOregonTHN128/issues)
+[![PlatformIO CI](https://github.com/Erriez/ErriezOregonTHN128/actions/workflows/actions.yml/badge.svg)](https://github.com/Erriez/ErriezOregonTHN128/actions/workflows/actions.yml)
+
 
 # Oregon THN128 433MHz temperature transmit/receive library for Arduino
 
@@ -254,3 +259,13 @@ https://www.saleae.com/downloads/.
 
 * [Online Doxygen HTML](https://erriez.github.io/ErriezOregonTHN128/index.html)
 * [Doxygen PDF](https://github.com/Erriez/ErriezOregonTHN128/blob/gh-pages/ErriezTemplateLibrary.pdf)
+
+## MIT License
+
+This project is published under [MIT license](https://github.com/Erriez/ErriezOregonTHN128/blob/main/LICENSE)
+with an additional end user agreement (next section).
+
+## End User Agreement :ukraine:
+
+End users shall accept the [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/main/END_USER_AGREEMENT.md)
+holding export restrictions to Russia to stop the WAR before using this project.
