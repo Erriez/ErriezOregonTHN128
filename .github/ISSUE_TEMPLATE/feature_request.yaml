@@ -9,7 +9,7 @@ body:
       value: |
         Thanks for taking the time to request a feature or suggest a new idea!
         * Before reporting a feature please check and search in [List of existing issues](https://github.com/Erriez/ErriezOregonTHN128/issues?q=is%3Aissue) 
-        * Please check [Online Documentation](https://github.com/Erriez/ErriezOregonTHN128/blob/main/README.md)
+        * Please check [Online Documentation](https://github.com/Erriez/ErriezOregonTHN128/blob/master/README.md)
   
   - type: input
     id: feature
@@ -72,7 +72,7 @@ body:
       label: Export restrictions.
       description: The owner of this repository Erriez included an explict export restriction to Russia.
       options:
-        - label: I accept [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/main/END_USER_AGREEMENT.md).
+        - label: I accept [End User Agreement](https://github.com/Erriez/ErriezOregonTHN128/blob/master/END_USER_AGREEMENT.md).
           required: true
 
   - type: markdown
