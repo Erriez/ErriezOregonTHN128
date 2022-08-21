@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Erriez
+ * Copyright (c) 2020-2022 Erriez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,10 @@
  */
 
 #include <Arduino.h>
+
+#if defined(ARDUINO_ARCH_AVR)
 #include <avr/interrupt.h>
+#endif
 
 #include "ErriezOregonTHN128Receive.h"
 
@@ -47,15 +50,60 @@ typedef enum {
 } RxState_t;
 
 /* Static variables */
-static uint8_t _rxPinPort;
-static uint8_t _rxPinBit;
-static uint8_t _rxInt;
+static uint8_t _rxPin;
 static uint32_t _tPulseBegin;
 static uint16_t _tPinHigh;
 static uint16_t _tPinLow;
 static int8_t _rxBit;
 static volatile uint32_t _rxData;
 static volatile RxState_t _rxState = StateSearchSync;
+
+/* Pin functions */
+#if defined(ARDUINO_ARCH_AVR)
+static uint8_t _rxPinPort;
+static uint8_t _rxPinBit;
+
+/*!
+ * \def RF_RX_PIN_INIT()
+ * \brief Initialize RF receive pin
+ * \param rfTxPin
+ *      RX pin to any external interrupt pin (INT0 or INT1)
+ */
+#define RF_RX_PIN_INIT(rfRxPin) {                   \
+    /* Save interrupt number of the RF pin */       \
+    _rxPin = digitalPinToInterrupt(extIntPin);      \
+    /* Save pin port and bit */                     \
+    _rxPinPort = digitalPinToPort(extIntPin);       \
+    _rxPinBit = digitalPinToBitMask(extIntPin);     \
+}
+
+/*!
+ * \def RF_RX_PIN_READ()
+ * \brief Return RX pin state
+ * \retval True: RF RX pin high, false: RF RX pin low
+ */
+#define RF_RX_PIN_READ() (*portInputRegister(_rxPinPort) & _rxPinBit)
+
+#elif defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)
+
+/*!
+ * \def RF_RX_PIN_INIT()
+ * \brief Initialize RF receive pin
+ * \param rfTxPin
+ *      RX pin to any external interrupt pin (On AVR: INT0 or INT1)
+ */
+#define RF_RX_PIN_INIT(rfRxPin) { _rxPin = rfRxPin; }
+
+/*!
+ * \def RF_RX_PIN_READ()
+ * \brief Return RX pin state
+ * \retval True: RF RX pin high, false: RF RX pin low
+ */
+#define RF_RX_PIN_READ() (digitalRead(_rxPin) ? HIGH : LOW)
+
+#else
+#error "May work, but not tested on this target"
+#endif
 
 /* Forward declaration */
 void rfPinChange(void);
@@ -67,7 +115,7 @@ void rfPinChange(void);
 static void rxEnable()
 {
     /* Enable INTx change interrupt */
-    attachInterrupt(_rxInt, rfPinChange, CHANGE);
+    attachInterrupt(_rxPin, rfPinChange, CHANGE);
 
     /* Initialize with search for sync state */
     _rxState = StateSearchSync;
@@ -79,7 +127,7 @@ static void rxEnable()
 static void rxDisable()
 {
     /* Disable INTx change interrupt */
-    detachInterrupt(_rxInt);
+    detachInterrupt(_rxPin);
 }
 
 /*!
@@ -214,7 +262,7 @@ static void handleSpace()
 /*!
  * \brief RF pin level change
  */
-void rfPinChange(void)
+void IRAM_ATTR rfPinChange(void)
 {
     uint32_t tNow;
     uint16_t _tPulseLength;
@@ -240,7 +288,7 @@ void rfPinChange(void)
     _tPulseBegin = tNow;
 
     /* Get RF pin state */
-    rfPinHigh = *portInputRegister(_rxPinPort) & _rxPinBit;
+    rfPinHigh = RF_RX_PIN_READ();
 
     /* Store pulse (high) or space (low) length */
     if (rfPinHigh) {
@@ -275,11 +323,8 @@ void rfPinChange(void)
  */
 void OregonTHN128_RxBegin(uint8_t extIntPin)
 {
-    /* Save interrupt number of the RF pin */
-    _rxInt = digitalPinToInterrupt(extIntPin);
-    /* Save pin port and bit */
-    _rxPinPort = digitalPinToPort(extIntPin);
-    _rxPinBit = digitalPinToBitMask(extIntPin);
+    /* Initialize RF RX pin */
+    RF_RX_PIN_INIT(extIntPin);
 
     /* Enable receive */
     rxEnable();

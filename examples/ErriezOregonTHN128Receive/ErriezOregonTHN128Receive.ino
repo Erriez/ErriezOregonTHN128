@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Erriez
+ * Copyright (c) 2020-2022 Erriez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,24 @@
  */
 
 #include <Arduino.h>
-#include <LowPower.h>
-#include <ErriezOregonTHN128Receive.h>
+#include <ErriezOregonTHN128Receive.h>  // https://github.com/Erriez/ErriezOregonTHN128
 
-// Connect RF receive to Arduino pin 2 (INT0) or pin 3 (INT1)
-#define RF_RX_PIN     2
+#if defined(ARDUINO_ARCH_AVR)
+#include <LowPower.h>           // https://github.com/LowPowerLab/LowPower
+#define RF_RX_PIN           2   // Connect RF receive pin to Arduino pin 2 (INT0) or pin 3 (INT1)
+#elif defined(ARDUINO_ARCH_ESP8266)
+#define RF_RX_PIN           14  // GPIO14 NodeMCU D5
+#elif defined(ARDUINO_ARCH_ESP32)
+#define RF_RX_PIN           19  // GPIO19
+#else
+#error "May work, but not tested on this target"
+#endif
 
 
 void printReceivedData(OregonTHN128Data_t *data)
 {
     bool negativeTemperature = false;
-    static uint32_t rxCount = 0;
+    static unsigned long rxCount = 0;
     int16_t tempAbs;
     char msg[80];
 
@@ -48,7 +55,7 @@ void printReceivedData(OregonTHN128Data_t *data)
                rxCount++,
                data->rollingAddress, data->channel,
                (negativeTemperature ? "-" : ""), (tempAbs / 10), (tempAbs % 10), data->lowBattery,
-               data->rawData);
+               (unsigned long)data->rawData);
     Serial.println(msg);
 }
 
@@ -81,15 +88,17 @@ void loop()
         // Print received data
         printReceivedData(&data);
 
-#if 0
-        // Wait ~30 seconds before receiving next temperature from one transmitter
-        // Works only when using one channel
-        Serial.flush();
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-        LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
-#endif
+//#if defined(ARDUINO_ARCH_AVR)
+//        // Wait ~30 seconds before receiving next temperature from one transmitter
+//        // Works only when using one channel
+//        Serial.flush();
+//        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+//        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+//        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+//        LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
+//#else
+//        delay(30 * 60);
+//#endif
 
         // Turn LED off
         digitalWrite(LED_BUILTIN, LOW);

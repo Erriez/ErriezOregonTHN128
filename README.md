@@ -1,14 +1,16 @@
 # Oregon THN128 433MHz temperature sensor transmit/receive library for Arduino
-[![Build Status](https://travis-ci.org/Erriez/ErriezOregonTHN128.svg?branch=master)](https://travis-ci.org/Erriez/ErriezOregonTHN128)
 
-This is a transmit/receive library Arduino library with the Oregon THN128 433MHz wireless protocol.
+# Oregon THN128 433MHz temperature transmit/receive library for Arduino
+
+This is a 433MHz wireless 3-channel Oregon THN128 temperature transmit/receive Arduino library for ATMega328,
+ESP8266 and ESP32 emulating v1 protocol:
 
 ![Oregon THN128](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png)
 
 ## Transmit / receive hardware
 
-This library is optimized for low-power ATMega328 microcontroller (AVR architecture). 
-This microcontroller is available on Arduino UNO and `Pro Mini 3.3V 8MHz` boards. Other targets are not tested.
+This Arduino library is optimized for low-power ATMega328 microcontroller (AVR architectures like `Arduino UNO` and 
+`Pro Mini 3.3V 8MHz` boards).
 
 ![Transmit and receive hardware](extras/transmit-receive-hardware.png)
 
@@ -18,21 +20,41 @@ This microcontroller is available on Arduino UNO and `Pro Mini 3.3V 8MHz` boards
 * Genuine DS18B20 temperature sensor.
 * STX802 low-power 433MHz transmitter.
 
-**Receiver on on the right breadboard:**
+**Receiver on the right breadboard:**
 
 * SRX882 low-power 433MHz receiver.
 * SSD1306 I2C 128x64 OLED display.
 * Pro-Mini 3V3 8MHz.
 
+### Supported microcontrollers
+
+* ATMega328 AVR designed for low-power
+* ESP8266
+* ESP32
+* Other microcontrollers are not tested and may or may not work
+
+
 ### Hardware notes
 
-* For low-power transmitters, a `Pro Mini 3V3 8MHz` bare board with ATMega328 microcontroller is highly recommended. The board has no serial interface chip which reduces continuous power consumption. An external FTDI232 - USB serial interface  should be connected for serial console / programming. (See red PCB on the picture)
+Supported hardware:
+* AVR designed for low-power
+* ESP8266
+* ESP32
+
+* For low-power transmitters, a `Pro Mini 3V3 8MHz` bare board with ATMega328 microcontroller is highly recommended. The
+  board has no serial interface chip which reduces continuous power consumption. An external FTDI232 - USB serial 
+  interface  should be connected for serial console / programming. (See red PCB on the picture)
   The SMD power LED should be desoldered from the Pro Mini to reduce continuous power consumption. 
-* A transmitter with (protected) 1500mA 18650 battery can operate for at least 6 months with `LowPower.h` functionality implemented. (By sending the temperature every 30 seconds)
-* Changing the BOD (Brown Out Detection) fuse to 1.8V allows operation between 1.8 and 4.2V 18650 battery. (Explanation beyond the scope of this project)
+* A transmitter with (protected) 1500mA 18650 battery can operate for at least 6 months with `LowPower.h` functionality
+  implemented. (By sending the temperature every 30 seconds)
+* Changing the BOD (Brown Out Detection) fuse to 1.8V allows operation between 1.8 and 4.2V 18650 battery. (Explanation 
+  beyond the scope of this project)
 * 1 to 3 temperature transmitters are supported, similar to the original Oregon THN128 temperature transmitters.
-* Check [list of counterfeit DS18B20 chips](https://github.com/cpetrich/counterfeit_DS18B20) , because this makes a huge difference in accuracy and read errors at 3.3V. Many DS18B20 chips from Aliexpress are counterfeit and won't work reliable at voltages below 3.3V.
-* [NiceRF Wireless Technology Co., Ltd.](https://nl.aliexpress.com/store/934254) sells high quality 433MHz transmit (STX802) and receiver modules (STX882) with a good range.
+* Check [list of counterfeit DS18B20 chips](https://github.com/cpetrich/counterfeit_DS18B20) , because this makes a huge
+  difference in accuracy and read errors at 3.3V. Many DS18B20 chips from Aliexpress are counterfeit and won't work  
+  reliable at voltages below 3.3V.
+* [NiceRF Wireless Technology Co., Ltd.](https://nl.aliexpress.com/store/934254) sells high quality 433MHz transmit 
+  (STX802) and receiver modules (STX882) with a good range.
 * A 18650 battery (with protection circuit) should be connected directly to the VCC pin (not VIN). 
 * The voltage regulator can be desoldered from the pro-micro board when not used for more power reduction.
 
@@ -198,3 +220,37 @@ void loop()
     LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
 }
 ```
+
+## Library Changes
+
+### v1.1.0
+
+The callback function `void delay100ms()` has been removed as this was not compatible with ESP32. The application should
+change the code to:
+
+```c++
+    // Send temperature twice with 100ms delay between packets
+    OregonTHN128_Transmit(&data);
+    delay(100);
+    OregonTHN128_Transmit(&data);
+```
+
+AVR targets can replace `delay(100)` with LowPower usage:
+
+```c++
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
+    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
+```
+
+## Saleae Logic Analyzer
+
+![capture](extras/SaleaeLogicAnalyzer/RX_rol7_channel1_temp20.7_lowbat0.png)
+
+[capture](extras/SaleaeLogicAnalyzer/RX_rol7_channel1_temp20.7_lowbat0.sal) from the Oregon THN128 can be opened with 
+https://www.saleae.com/downloads/.
+
+## Generated Arduino Library Doxygen Documentation
+
+* [Online Doxygen HTML](https://erriez.github.io/ErriezOregonTHN128/index.html)
+* [Doxygen PDF](https://github.com/Erriez/ErriezOregonTHN128/blob/gh-pages/ErriezTemplateLibrary.pdf)

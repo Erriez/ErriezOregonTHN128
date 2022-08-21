@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Erriez
+ * Copyright (c) 2020-2022 Erriez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,6 @@
  */
 
 #include <Arduino.h>
-#include <util/delay.h>
 #include "ErriezOregonTHN128Transmit.h"
 
 /* Function prototypes */
@@ -39,6 +38,9 @@ void delay100ms(void) __attribute__((weak));
 extern void delay100ms(void);
 
 /* Static variables */
+#if defined(ARDUINO_ARCH_AVR)
+#include <util/delay.h>
+
 static int8_t _rfTxPort = -1;
 static int8_t _rfTxBit = -1;
 
@@ -72,16 +74,93 @@ static int8_t _rfTxBit = -1;
 }
 
 /*!
+ * \def IS_RF_TX_PIN_INITIALIZED()
+ * \brief Check if pin is initialized
+ * \retval True: RF TX pin initialized, False: RF TX pin not initialized
+ */
+#define IS_RF_TX_PIN_INITIALIZED()  ((_rfTxPort >= 0) && (_rfTxBit >= 0))
+
+/*!
  * \def RF_TX_PIN_HIGH()
  * \brief TX pin high
  */
-#define RF_TX_PIN_HIGH()        { *portOutputRegister(_rfTxPort) |= _rfTxBit; }
+#define RF_TX_PIN_HIGH()            { *portOutputRegister(_rfTxPort) |= _rfTxBit; }
 
 /*!
  * \def RF_TX_PIN_LOW()
  * \brief TX pin low
  */
-#define RF_TX_PIN_LOW()         { *portOutputRegister(_rfTxPort) &= ~_rfTxBit; }
+#define RF_TX_PIN_LOW()             { *portOutputRegister(_rfTxPort) &= ~_rfTxBit; }
+
+/*!
+ * \def RF_TX_DELAY_US
+ * \brief Optimized AVR delay in us
+ */
+#define RF_TX_DELAY_US(us)          _delay_us(us)
+
+/*!
+ * \def RF_TX_DELAY_MS
+ * \brief Optimized AVR delay in ms
+ */
+#define RF_TX_DELAY_MS(ms)          _delay_ms(ms)
+
+#elif defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)
+static int8_t _rfTxPin = -1;
+
+/*!
+ * \def RF_TX_PIN_INIT(rfTxPin)
+ * \brief Initialize RF transmit pin
+ * \param rfTxPin
+ *      TX pin to external interrupt pin (INT0 or INT1)
+ */
+#define RF_TX_PIN_INIT(rfTxPin)  {                  \
+    _rfTxPin= rfTxPin;                              \
+    pinMode(_rfTxPin, OUTPUT);                      \
+}
+
+/*!
+ * \def RF_TX_PIN_DISABLE()
+ * \brief TX pin disable
+ */
+#define RF_TX_PIN_DISABLE() {                       \
+    if (_rfTxPin >= 0) {                            \
+        pinMode(_rfTxPin, INPUT);                   \
+    }                                               \
+}
+
+/*!
+ * \def IS_RF_TX_PIN_INITIALIZED()
+ * \brief Check if pin is initialized
+ * \retval True: RF TX pin initialized, False: RF TX pin not initialized
+ */
+#define IS_RF_TX_PIN_INITIALIZED()  (_rfTxPin >= 0)
+
+/*!
+ * \def RF_TX_PIN_HIGH()
+ * \brief TX pin high
+ */
+#define RF_TX_PIN_HIGH()            { digitalWrite(_rfTxPin, HIGH); }
+
+/*!
+ * \def RF_TX_PIN_LOW()
+ * \brief TX pin low
+ */
+#define RF_TX_PIN_LOW()             { digitalWrite(_rfTxPin, LOW); }
+
+/*!
+ * \def RF_TX_DELAY_US
+ * \brief Generic delay in us
+ */
+#define RF_TX_DELAY_US(us)          delayMicroseconds(us)
+
+/*!
+ * \def RF_TX_DELAY_MS
+ * \brief Generic delay in ms
+ */
+#define RF_TX_DELAY_MS(ms)          delay(ms)
+#else
+#error "May work, but not tested on this target"
+#endif
 
 /*! @} */
 
@@ -93,9 +172,9 @@ static void txSync()
 {
     /* Transmit sync pulse */
     RF_TX_PIN_HIGH();
-    _delay_us(T_SYNC_US);
+    RF_TX_DELAY_US(T_SYNC_US);
     RF_TX_PIN_LOW();
-    _delay_us(T_SYNC_US);
+    RF_TX_DELAY_US(T_SYNC_US);
 }
 
 /*!
@@ -105,9 +184,9 @@ static void txBit0()
 {
     /* Transmit data bit 0 pulse */
     RF_TX_PIN_LOW();
-    _delay_us(T_BIT_US);
+    RF_TX_DELAY_US(T_BIT_US);
     RF_TX_PIN_HIGH();
-    _delay_us(T_BIT_US);
+    RF_TX_DELAY_US(T_BIT_US);
 }
 
 /*!
@@ -117,9 +196,9 @@ static void txBit1()
 {
     /* Transmit data bit 1 pulse */
     RF_TX_PIN_HIGH();
-    _delay_us(T_BIT_US);
+    RF_TX_DELAY_US(T_BIT_US);
     RF_TX_PIN_LOW();
-    _delay_us(T_BIT_US);
+    RF_TX_DELAY_US(T_BIT_US);
 }
 
 /*!
@@ -140,7 +219,7 @@ static void txPreamble()
     for (uint8_t i = 0; i < 12; i++) {
         txBit1();
     }
-    _delay_us(T_PREAMBLE_SPACE_US);
+    RF_TX_DELAY_US(T_PREAMBLE_SPACE_US);
 }
 
 /* Transmit 32-bit data */
@@ -191,26 +270,11 @@ void OregonTHN128_TxEnd(void)
 void OregonTHN128_TxRawData(uint32_t rawData)
 {
     /* Check RF transmit pin initialized */
-    if ((_rfTxPort < 0) && (_rfTxBit < 0)) {
+    if (!IS_RF_TX_PIN_INITIALIZED()) {
         return;
     }
 
-    /* First transmit */
-    txPreamble();
-    txSync();
-    txData(rawData);
-    txDisable();
-
-    /* Wait 100ms between frames */
-    if (delay100ms != NULL) {
-        /* Call 100ms user delay (weak symbol) */
-        delay100ms();
-    } else {
-        /* Use optimized AVR delay */
-        _delay_ms(T_SPACE_FRAMES_MS);
-    }
-
-    /* Second transmit */
+    /* Transmit */
     txPreamble();
     txSync();
     txData(rawData);
@@ -220,6 +284,8 @@ void OregonTHN128_TxRawData(uint32_t rawData)
 /*!
  * \brief Transmit
  *      Transmit data
+ * \details
+ *      The application should call OregonTHN128_TxRawData() twice at 100ms interval.
  * \param data
  *      Oregon THN128 input structure
  */

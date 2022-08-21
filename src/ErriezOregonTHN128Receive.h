@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Erriez
+ * Copyright (c) 2020-2022 Erriez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,6 +88,11 @@
 
 #include <stdint.h>
 #include "ErriezOregonTHN128.h"
+
+// Macro IRAM_ATTR is defined for ESP pin interrupts
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
 
 #ifdef __cplusplus
 extern "C" {
