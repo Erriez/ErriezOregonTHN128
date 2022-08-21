@@ -92,7 +92,7 @@ jobs:
         run: |
           sudo apt-get install texlive-latex-recommended texlive-pictures texlive-latex-extra -y
           make -C docs/latex
-          cp docs/latex/refman.pdf docs/html/$REPO_NAME.pdf
+          cp docs/latex/refman.pdf docs/html/$PDF_NAME.pdf
         shell: bash
 
       - name: Deploy to GitHub branch gh-pages
