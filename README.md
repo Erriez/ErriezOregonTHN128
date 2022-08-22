@@ -88,143 +88,15 @@ Data (see header file [ErriezOregonTHN128Receive.h](https://github.com/Erriez/Er
 ![Oregon THN128 Temperature 16.6](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Temperature16.6.png)
 
 
-## Example low power receive
+## Examples
 
-```c++
-#include <LowPower.h>
-#include <ErriezOregonTHN128Receive.h>
+Please refer to the examples:
 
-// Connect RF receive to Arduino pin 2 (INT0) or pin 3 (INT1)
-#define RF_RX_PIN     2
+* [OregonTHN128 Receive](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino)
+* [OregonTHN128 Receive SSD1306 OLED](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino)
+* [OregonTHN128 Transmit random temperature](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino)
+* [OregonTHN128 Transmit DS1820 1-wire temperature sensor](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino)
 
-
-void printReceivedData(OregonTHN128Data_t *data)
-{
-    bool negativeTemperature = false;
-    static uint32_t rxCount = 0;
-    int16_t tempAbs;
-    char msg[80];
-
-    // Convert to absolute temperature
-    tempAbs = data->temperature;
-    if (tempAbs < 0) {
-        negativeTemperature = true;
-        tempAbs *= -1;
-    }
-    snprintf_P(msg, sizeof(msg), 
-               PSTR("RX %lu: Rol: %d, Channel %d, Temp: %s%d.%d, Low batt: %d (0x%08lx)"),
-               rxCount++,
-               data->rollingAddress, data->channel,
-               (negativeTemperature ? "-" : ""), (tempAbs / 10), (tempAbs % 10), data->lowBattery,
-               data->rawData);
-    Serial.println(msg);
-}
-
-void setup()
-{
-    // Initialize serial port
-    Serial.begin(115200);
-    Serial.println(F("Oregon THN128 433MHz temperature receive"));
-
-    // Turn LED on
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
-
-    // Initialize receiver
-    OregonTHN128_RxBegin(RF_RX_PIN);
-}
-
-void loop()
-{
-    OregonTHN128Data_t data;
-
-    // Check temperature received
-    if (OregonTHN128_Available()) {
-        digitalWrite(LED_BUILTIN, LOW);
-      
-        // Read temperature
-        OregonTHN128_Read(&data);
-
-        // Print received data
-        printReceivedData(&data);
-
-        // Wait ~30 seconds before receiving next temperature
-        Serial.flush();
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-        LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-        LowPower.powerDown(SLEEP_2S, ADC_OFF, BOD_OFF);
-
-        digitalWrite(LED_BUILTIN, HIGH);
-
-        // Enable receive
-        OregonTHN128_RxEnable();
-    }
-}
-```
-
-
-## Example low power transmit
-
-```c++
-#include <LowPower.h>
-#include <ErriezOregonTHN128Transmit.h>
-
-// Pin defines (Any DIGITAL pin)
-#define RF_TX_PIN           3
-
-OregonTHN128Data_t data = {
-    .rawData = 0,           // Raw data filled in by library
-    .rollingAddress = 5,    // Rolling address 0..7
-    .channel = 1,           // Channel 1, 2 or 3
-    .temperature = 0,       // Temperature -99.9 .. 99.9 multiplied by 10
-    .lowBattery = false,    // Low battery true or false
-};
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// Function is called from library
-void delay100ms()
-{
-    // Blink LED within 100ms space between two packets
-    digitalWrite(LED_BUILTIN, HIGH);
-    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-    digitalWrite(LED_BUILTIN, LOW);
-    LowPower.powerDown(SLEEP_60MS, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_15MS, ADC_OFF, BOD_OFF);
-}
-
-#ifdef __cplusplus
-}
-#endif
-
-void setup()
-{
-    // Initialize built-in LED
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, LOW);
-
-    // Initialize pins
-    OregonTHN128_TxBegin(RF_TX_PIN);
-}
-
-void loop()
-{
-    // Set temperature
-    data.temperature = 123; //12.3`C
-
-    // Send temperature
-    OregonTHN128_Transmit(&data);
-
-    // Wait ~30 seconds before sending next temperature
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF);
-}
-```
 
 ## Library Changes
 
