@@ -70,10 +70,10 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="Licence MIT" class="inline"/></a> <a href="https://github.com/Erriez/ErriezOregonTHN128"><img src="https://img.shields.io/badge/language-C%2FC%2B%2B-informational" alt="Language C/C++" class="inline"/></a> <a href="https://github.com/Erriez/ErriezOregonTHN128/releases"><img src="https://img.shields.io/github/v/release/Erriez/ErriezOregonTHN128?display_name=tag" alt="Release tag" class="inline"/></a> <a href="https://github.com/Erriez/ErriezOregonTHN128/issues"><img src="https://shields.io/github/issues-raw/Erriez/ErriezOregonTHN128" alt="Open issue" class="inline"/></a> <a href="https://github.com/Erriez/ErriezOregonTHN128/actions/workflows/actions.yml"><object type="image/svg+xml" data="https://github.com/Erriez/ErriezOregonTHN128/actions/workflows/actions.yml/badge.svg" style="pointer-events: none;">PlatformIO CI</object></a></p>
 <h1>Oregon THN128 433MHz temperature transmit/receive library for Arduino</h1>
-<p>This is a 433MHz wireless 3-channel Oregon THN128 temperature transmit/receive Arduino library for ATMega328, ESP8266 and ESP32 emulating v1 protocol:</p>
+<p>This is a 433MHz wireless 3-channel Oregon THN128 temperature transmit/receive Arduino library for ATMega328, ESP8266 and ESP32 using the (reverse-engineered) Oregon THN128 v1 protocol:</p>
 <p><img src="https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png" alt="Oregon THN128" class="inline"/></p>
 <h2>Transmit / receive hardware</h2>
-<p>This Arduino library is optimized for low-power ATMega328 microcontroller (AVR architectures like <code>Arduino UNO</code> and <code>Pro Mini 3.3V 8MHz</code> boards).</p>
+<p>This Arduino library can be used with low-power ATMega328 microcontroller (AVR architectures like <code>Arduino UNO</code> and <code>Pro Mini 3.3V 8MHz</code> boards).</p>
 <p><img src="extras/transmit-receive-hardware.png" alt="Transmit and receive hardware" class="inline"/></p>
 <p><b>Temperature transmitter on the left breadboard:</b></p>
 <ul>
@@ -94,7 +94,45 @@ $(function() {
 <li>ESP32</li>
 <li>Other microcontrollers are not tested and may or may not work</li>
 </ul>
-<h3>Hardware notes</h3>
+<h2>Arduino Examples</h2>
+<ul>
+<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino">Oregon THN128 Receive</a></li>
+<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino">Oregon THN128 Receive SSD1306 OLED</a></li>
+<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino">Oregon THN128 Transmit random temperature</a></li>
+<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino">Oregon THN128 Transmit DS1820 1-wire temperature sensor</a></li>
+<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ESP32/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino">Oregon THN128 ESP32 MQTT Homeassistant</a></li>
+</ul>
+<h3>ESP32 with MQTT and Homeassistant</h3>
+<p>The <a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ESP32/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino">Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino</a> sketch can be used with Homeassistant integration.</p>
+<p>Example screenshot Homeassistant dasboard:</p>
+<p><img src="extras/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.png" alt="Oregon THN128 ESP32 MQTT Homeassistant screenshot" class="inline"/></p>
+<p>Follow the steps below:</p>
+<ol type="1">
+<li>Configure <a href="https://www.home-assistant.io/integrations/mqtt/">Homeassistant MQTT</a> in <code>configuration.yaml</code>:</li>
+</ol>
+<div class="fragment"><div class="line">mqtt:</div>
+<div class="line">  discovery_prefix: ha</div>
+<div class="line">  # Enable when using SSL:</div>
+<div class="line">  # certificate: /ssl/ca.crt</div>
+<div class="line">  # client_cert: /ssl/client.crt</div>
+<div class="line">  # client_key: /ssl/client.key</div>
+</div><!-- fragment --><ol type="1">
+<li>MQTT broker hostname, username and password should be configured in <code>Homeassistant | Settings | Devices | MQTT</code>.</li>
+<li>Configure the listed macro's in the example, build and run from the Arduino IDE. The following Oregon THN128 entities are automatically registered after a succesful MQTT connection:</li>
+</ol>
+<ul>
+<li>sensor.oregon_thn128_ch1</li>
+<li>sensor.oregon_thn128_ch2</li>
+<li>sensor.oregon_thn128_ch3</li>
+<li>sensor.oregon_thn128_battery</li>
+</ul>
+<ol type="1">
+<li>Configure Homeassistant dashboard configuration file:</li>
+</ol>
+<ul>
+<li><a href="extras/HomeassistantDashboard.yaml">Homeassistant Dashboard YAML</a></li>
+</ul>
+<h2>Hardware Design Notes</h2>
 <p>Supported hardware:</p><ul>
 <li>AVR designed for low-power</li>
 <li>ESP8266</li>
@@ -136,14 +174,6 @@ $(function() {
 </li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Temperature16.6.png" alt="Oregon THN128 Temperature 16.6" class="inline"/></p>
-<h2>Examples</h2>
-<p>Please refer to the examples:</p>
-<ul>
-<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino">OregonTHN128 Receive</a></li>
-<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino">OregonTHN128 Receive SSD1306 OLED</a></li>
-<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino">OregonTHN128 Transmit random temperature</a></li>
-<li><a href="https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino">OregonTHN128 Transmit DS1820 1-wire temperature sensor</a></li>
-</ul>
 <h2>Library Changes</h2>
 <h3>v1.1.0</h3>
 <p>The callback function <code>void delay100ms()</code> has been removed as this was not compatible with ESP32. The application should change the code to:</p>
