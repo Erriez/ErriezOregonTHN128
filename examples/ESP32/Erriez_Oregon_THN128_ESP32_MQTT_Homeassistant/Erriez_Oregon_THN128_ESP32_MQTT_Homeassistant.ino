@@ -29,6 +29,7 @@
  *      Documentation:  https://erriez.github.io/ErriezOregonTHN128
  *
  *  Hardware:
+ *  - Tested with NodeMCU-32S
  *  - LED_PIN:   LED pin on the ESP32
  *  - RF_RX_PIN: 433MHz receiver pin
  *  
@@ -118,9 +119,18 @@ WiFiClient wifiClient;
 MQTTClient mqtt(MQTT_BUF_SIZE);
 
 volatile bool ha_online = false;
-float temperatures[3] = { -127, -127, -127 }; // 3 channels
-long  tlastupdate[3] = { 0, 0, 0 };
-bool  lowBattery = false;
+
+typedef struct {
+    long   tlastupdate;
+    String temperature;
+    String battery;
+} OregonTHN128Device_t;
+
+OregonTHN128Device_t devices[3] = {
+    { .tlastupdate = 0, .temperature = "unknown", .battery = "unknown" },
+    { .tlastupdate = 0, .temperature = "unknown", .battery = "unknown" },
+    { .tlastupdate = 0, .temperature = "unknown", .battery = "unknown" }
+};
 
 #ifdef USE_SSL
 // Root CA certificate
@@ -149,8 +159,9 @@ void mqttPublish(String topic, String payload, bool retain=false, int qos=0)
     mqtt.publish(topic, payload, retain, qos);
 }
 
-void mqttPublishDeviceChannelConfig(String topic, int channel)
+void mqttPublishDeviceChannelConfig(int channel)
 {
+    String topic = "ha/sensor/oregon_thn128_t" + String(channel) + "/config";
     String payload;
 
     // Allocate static JSON document on stack.
@@ -162,12 +173,12 @@ void mqttPublishDeviceChannelConfig(String topic, int channel)
     // Use arduinojson.org/v6/assistant to compute the capacity.
     StaticJsonDocument<300> doc;
 
-    doc["name"]                = String("Oregon THN128 CH") + String(channel);
-    doc["unique_id"]           = String("sensor.oregon_thn128_ch") + String(channel);
-    doc["device_class"]        = String("temperature");
-    doc["unit_of_measurement"] = String("°C");
-    doc["value_template"]      = String("{{value_json.t") + String(channel) + "}}";
-    doc["state_topic"]         = String("ha/sensor/oregon_thn128/state");
+    doc["name"]                = "Oregon THN128 CH" + String(channel) + " Temperature";
+    doc["unique_id"]           = "sensor.oregon_thn128_ch" + String(channel) + "_temperature";
+    doc["device_class"]        = "temperature";
+    doc["unit_of_measurement"] = "°C";
+    doc["value_template"]      = "{{value_json.t" + String(channel) + "}}";
+    doc["state_topic"]         = "ha/sensor/oregon_thn128/state";
     serializeJson(doc, payload);
 
     // Publish
@@ -176,16 +187,17 @@ void mqttPublishDeviceChannelConfig(String topic, int channel)
     // doc object is automatically destroyed from stack
 }
 
-void mqttPublishDeviceBatteryConfig(String topic)
+void mqttPublishDeviceBatteryConfig(int channel)
 {
+    String topic = "ha/sensor/oregon_thn128_b" + String(channel) + "/config";
     String payload;
     StaticJsonDocument<256> doc;
 
-    doc["name"]                = String("Oregon THN128 Battery");
-    doc["unique_id"]           = String("sensor.oregon_thn128_lowbatt");
-    doc["device_class"]        = String("battery");
-    doc["value_template"]      = String("{{value_json.battery}}");
-    doc["state_topic"]         = String("ha/sensor/oregon_thn128/state");
+    doc["name"]                = "Oregon THN128 CH" + String(channel) + " Battery";
+    doc["unique_id"]           = "sensor.oregon_thn128_ch" + String(channel) + "_battery";
+    doc["device_class"]        = "battery";
+    doc["value_template"]      = "{{value_json.b" + String(channel) + "}}";
+    doc["state_topic"]         = "ha/sensor/oregon_thn128/state";
     serializeJson(doc, payload);
 
     // Publish
@@ -193,16 +205,11 @@ void mqttPublishDeviceBatteryConfig(String topic)
 }
 
 void mqttPublishHaConfig()
-{  
-    String topic;
-
+{
     for (int channel = 1; channel <= 3; channel++) {
-        topic = "ha/sensor/oregon_thn128_ch" + String(channel) + "/config";
-        mqttPublishDeviceChannelConfig(topic, channel);
+        mqttPublishDeviceChannelConfig(channel);
+        mqttPublishDeviceBatteryConfig(channel);
     }
-
-    topic = String("ha/sensor/oregon_thn128_low_battery/config");
-    mqttPublishDeviceBatteryConfig(topic);
 }
 
 void mqttPublishStates()
@@ -212,10 +219,12 @@ void mqttPublishStates()
     String payload;
 
     StaticJsonDocument<128> doc;
-    doc["t1"] = temperatures[0] <= -127 ? "unknown" : String(temperatures[0], 1);
-    doc["t2"] = temperatures[1] <= -127 ? "unknown" : String(temperatures[1], 1);
-    doc["t3"] = temperatures[2] <= -127 ? "unknown" : String(temperatures[2], 1);
-    doc["battery"] = lowBattery ? 0 : 100;
+    doc["t1"] = devices[0].temperature;
+    doc["t2"] = devices[1].temperature;
+    doc["t3"] = devices[2].temperature;
+    doc["b1"] = devices[0].battery;
+    doc["b2"] = devices[1].battery;
+    doc["b3"] = devices[2].battery;
     serializeJson(doc, payload);
 
     // Publish
@@ -366,14 +375,15 @@ void loop()
                    (unsigned long)data.rawData);
         Serial.println(msg);
 
-        tlastupdate[data.channel-1] = millis();
-        temperatures[data.channel-1] = temperature;
-        lowBattery = data.lowBattery;
+        devices[data.channel-1].tlastupdate = millis();
+        devices[data.channel-1].temperature =  temperature <= -127 ? "unknown" : String(temperature, 1);
+        devices[data.channel-1].battery = data.lowBattery ? 0 : 100;
 
         // Reset temperature when connection lost
         for (int channel = 0; channel < 3; channel++) {
-            if ((millis() - tlastupdate[channel]) > RX_CH_TIMETOUT_MS) {
-                temperatures[channel] = -127;
+            if ((millis() - devices[channel].tlastupdate) > RX_CH_TIMETOUT_MS) {
+                devices[data.channel-1].temperature = "unknown";
+                devices[data.channel-1].battery = "unknown";
             }
         }
 

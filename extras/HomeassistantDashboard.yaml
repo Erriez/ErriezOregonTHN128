@@ -6,22 +6,26 @@ views:
       - hours_to_show: 24
         graph: line
         type: sensor
-        entity: sensor.oregon_thn128_ch1
+        entity: sensor.oregon_thn128_ch1_temperature
         detail: 2
         name: Oregon THN128 CH1 (Garden)
       - hours_to_show: 24
         graph: line
         type: sensor
-        entity: sensor.oregon_thn128_ch2
+        entity: sensor.oregon_thn128_ch2_temperature
         detail: 1
       - hours_to_show: 24
         graph: line
         type: sensor
-        entity: sensor.oregon_thn128_ch3
+        entity: sensor.oregon_thn128_ch3_temperature
         detail: 1
       - type: entities
         entities:
-          - entity: sensor.oregon_thn128_ch1
-          - entity: sensor.oregon_thn128_ch2
-          - entity: sensor.oregon_thn128_ch3
-          - entity: sensor.oregon_thn128_battery
+          - entity: sensor.oregon_thn128_ch1_temperature
+          - entity: sensor.oregon_thn128_ch2_temperature
+          - entity: sensor.oregon_thn128_ch3_temperature
+      - type: entities
+        entities:
+          - entity: sensor.oregon_thn128_ch1_battery
+          - entity: sensor.oregon_thn128_ch2_battery
+          - entity: sensor.oregon_thn128_ch3_battery
