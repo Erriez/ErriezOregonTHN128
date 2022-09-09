@@ -8,13 +8,13 @@
 # Oregon THN128 433MHz temperature transmit/receive library for Arduino
 
 This is a 433MHz wireless 3-channel Oregon THN128 temperature transmit/receive Arduino library for ATMega328,
-ESP8266 and ESP32 emulating v1 protocol:
+ESP8266 and ESP32 using the (reverse-engineered) Oregon THN128 v1 protocol:
 
 ![Oregon THN128](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png)
 
 ## Transmit / receive hardware
 
-This Arduino library is optimized for low-power ATMega328 microcontroller (AVR architectures like `Arduino UNO` and 
+This Arduino library can be used with low-power ATMega328 microcontroller (AVR architectures like `Arduino UNO` and 
 `Pro Mini 3.3V 8MHz` boards).
 
 ![Transmit and receive hardware](extras/transmit-receive-hardware.png)
@@ -39,7 +39,49 @@ This Arduino library is optimized for low-power ATMega328 microcontroller (AVR a
 * Other microcontrollers are not tested and may or may not work
 
 
-### Hardware notes
+## Arduino Examples
+
+* [Oregon THN128 Receive](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino)
+* [Oregon THN128 Receive SSD1306 OLED](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino)
+* [Oregon THN128 Transmit random temperature](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino)
+* [Oregon THN128 Transmit DS1820 1-wire temperature sensor](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino)
+* [Oregon THN128 ESP32 MQTT Homeassistant](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ESP32/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino)
+
+
+### ESP32 with MQTT and Homeassistant
+
+The [Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ESP32/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino) sketch can be used with Homeassistant integration.
+
+Example screenshot Homeassistant dasboard:
+
+![Oregon THN128 ESP32 MQTT Homeassistant screenshot](extras/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.png)
+
+Follow the steps below:
+
+1. Configure [Homeassistant MQTT](https://www.home-assistant.io/integrations/mqtt/) in `configuration.yaml`:
+
+```yaml
+mqtt:
+  discovery_prefix: ha
+  # Enable when using SSL:
+  # certificate: /ssl/ca.crt
+  # client_cert: /ssl/client.crt
+  # client_key: /ssl/client.key
+```
+
+2. MQTT broker hostname, username and password should be configured in `Homeassistant | Settings | Devices | MQTT`.
+
+3. Configure the listed macro's in the example, build and run from the Arduino IDE. The following Oregon THN128 entities are automatically registered after a succesful MQTT connection:
+- sensor.oregon_thn128_ch1
+- sensor.oregon_thn128_ch2
+- sensor.oregon_thn128_ch3
+- sensor.oregon_thn128_battery
+
+4. Configure Homeassistant dashboard configuration file:
+- [Homeassistant Dashboard YAML](extras/HomeassistantDashboard.yaml)
+
+
+## Hardware Design Notes
 
 Supported hardware:
 * AVR designed for low-power
@@ -86,16 +128,6 @@ Data (see header file [ErriezOregonTHN128Receive.h](https://github.com/Erriez/Er
    * Bit 0..7: CRC
 
 ![Oregon THN128 Temperature 16.6](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128Temperature16.6.png)
-
-
-## Examples
-
-Please refer to the examples:
-
-* [OregonTHN128 Receive](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino)
-* [OregonTHN128 Receive SSD1306 OLED](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino)
-* [OregonTHN128 Transmit random temperature](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino)
-* [OregonTHN128 Transmit DS1820 1-wire temperature sensor](https://github.com/Erriez/ErriezOregonTHN128/blob/master/examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino)
 
 
 ## Library Changes

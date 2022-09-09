@@ -62,10 +62,17 @@ jobs:
           pio pkg install --global --library "adafruit/Adafruit SSD1306"
           pio pkg install --global --library "adafruit/Adafruit BusIO"
 
-      - name: Build PlatformIO examples Arduino
+      - name: Build PlatformIO common examples AVR / ESP8266 / ESP32
         run: pio ci -O "lib_ldf_mode=chain+" --lib="." --board=uno --board=pro16MHzatmega328 --board=nodemcuv2 --board lolin_d32
         env:
           PLATFORMIO_CI_SRC: ${{ matrix.examples }}
+      
+      - name: Build PlatformIO examples ESP32 specific
+        run: |
+          pio pkg install --global --library https://github.com/bblanchon/ArduinoJson.git
+          pio pkg install --global --library https://github.com/256dpi/arduino-mqtt
+
+          pio ci -O "lib_ldf_mode=chain+" --lib="." --board lolin_d32 examples/ESP32/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino
 
   doxygen:
     runs-on: ubuntu-latest

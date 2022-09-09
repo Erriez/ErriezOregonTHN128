@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 #
 #  MIT License
 #
@@ -63,19 +63,22 @@ function autobuild()
     pio pkg install --global --library "adafruit/Adafruit GFX Library"
     pio pkg install --global --library "adafruit/Adafruit SSD1306"
     pio pkg install --global --library "adafruit/Adafruit BusIO"
+    pio pkg install --global --library https://github.com/bblanchon/ArduinoJson.git
+    pio pkg install --global --library https://github.com/256dpi/arduino-mqtt
 
     echo "Building examples..."
 
     # Use option -O "lib_ldf_mode=chain+" to parse defines
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_AVR} examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino
 
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino
-    platformio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128Receive/ErriezOregonTHN128Receive.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128ReceiveSSD1306/ErriezOregonTHN128ReceiveSSD1306.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128Transmit/ErriezOregonTHN128Transmit.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="." ${BOARDS_ESP8266} ${BOARDS_ESP32} examples/ErriezOregonTHN128TransmitDS1820/ErriezOregonTHN128TransmitDS1820.ino
+    pio ci -O "lib_ldf_mode=chain+" --lib="."                   ${BOARDS_ESP32} examples/ESP32/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant/Erriez_Oregon_THN128_ESP32_MQTT_Homeassistant.ino
 }
 
 function generate_doxygen()
