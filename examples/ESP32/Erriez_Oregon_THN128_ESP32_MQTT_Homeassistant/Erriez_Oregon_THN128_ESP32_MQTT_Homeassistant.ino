@@ -382,8 +382,8 @@ void loop()
         // Reset temperature when connection lost
         for (int channel = 0; channel < 3; channel++) {
             if ((millis() - devices[channel].tlastupdate) > RX_CH_TIMETOUT_MS) {
-                devices[data.channel-1].temperature = "unknown";
-                devices[data.channel-1].battery = "unknown";
+                devices[channel].temperature = "unknown";
+                devices[channel].battery = "unknown";
             }
         }
 
