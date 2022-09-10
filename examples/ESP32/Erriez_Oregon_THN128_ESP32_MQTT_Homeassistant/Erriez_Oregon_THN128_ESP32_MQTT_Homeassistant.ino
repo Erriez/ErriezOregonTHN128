@@ -134,22 +134,25 @@ OregonTHN128Device_t devices[3] = {
 
 #ifdef USE_SSL
 // Root CA certificate
-const char *root_ca = \
-     "-----BEGIN CERTIFICATE-----\n" \
-     "YOUR ROOT CA\n" \
-     "-----END CERTIFICATE-----\n";
+const char root_ca[] PROGMEM = R"EOF(
+-----BEGIN CERTIFICATE-----
+YOUR ROOT CA
+-----END CERTIFICATE-----
+)EOF";
 
 // Client certificate
-const char *client_cert = \
-    "-----BEGIN CERTIFICATE-----\n" \
-    "YOUR CLIENT CERT\n" \
-    "-----END CERTIFICATE-----\n";
+const char client_cert[] PROGMEM = R"EOF(
+-----BEGIN CERTIFICATE-----
+YOUR CLIENT CERT
+-----END CERTIFICATE-----
+)EOF";
 
 // Client certificate key
-const char *client_key = \
-    "-----BEGIN PRIVATE KEY-----\n" \
-    "YOUR CLIENT KEY\n" \
-    "-----END PRIVATE KEY-----\n";
+const char client_key[] PROGMEM = R"EOF(
+-----BEGIN PRIVATE KEY-----
+YOUR CLIENT KEY
+-----END PRIVATE KEY-----
+)EOF";
 #endif
 
 
