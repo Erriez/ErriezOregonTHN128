@@ -1,14 +1,14 @@
+# Oregon THN128 433MHz temperature transmit/receive library for Arduino
+
+This is a 433MHz wireless 3-channel Oregon THN128 temperature transmit/receive Arduino library for ATMega328,
+ESP8266 and ESP32 using the (reverse-engineered) Oregon THN128 v1 protocol:
+
 [![Licence MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Erriez/ErriezOregonTHN128/blob/master/LICENSE)
 [![Language C/C++](https://img.shields.io/badge/language-C%2FC%2B%2B-informational)](https://github.com/Erriez/ErriezOregonTHN128)
 [![Release tag](https://img.shields.io/github/v/release/Erriez/ErriezOregonTHN128?display_name=tag)](https://github.com/Erriez/ErriezOregonTHN128/releases)
 [![Open issue](https://shields.io/github/issues-raw/Erriez/ErriezOregonTHN128)](https://github.com/Erriez/ErriezOregonTHN128/issues)
 [![PlatformIO CI](https://github.com/Erriez/ErriezOregonTHN128/actions/workflows/actions.yml/badge.svg)](https://github.com/Erriez/ErriezOregonTHN128/actions/workflows/actions.yml)
 
-
-# Oregon THN128 433MHz temperature transmit/receive library for Arduino
-
-This is a 433MHz wireless 3-channel Oregon THN128 temperature transmit/receive Arduino library for ATMega328,
-ESP8266 and ESP32 using the (reverse-engineered) Oregon THN128 v1 protocol:
 
 ![Oregon THN128](https://raw.githubusercontent.com/Erriez/ErriezOregonTHN128/master/extras/OregonTHN128.png)
 
