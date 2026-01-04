@@ -66,7 +66,7 @@
 #endif
 #include <ArduinoJson.h>                  // https://github.com/bblanchon/ArduinoJson.git v6.19.4
 #include <MQTTClient.h>                   // https://github.com/256dpi/arduino-mqtt v2.5.0
-#include <ErriezOregonTHN128Receive.h>    // https://github.com/Erriez/ErriezOregonTHN128 v1.1.0
+#include <ErriezOregonTHN128Receive.h>    // https://github.com/Erriez/ErriezOregonTHN128 v1.1.1
 
 #ifndef ARDUINO_ARCH_ESP32
 #error "This example has been tested on ESP32 only"
