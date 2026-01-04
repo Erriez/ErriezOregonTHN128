@@ -1,4 +1,5 @@
 <map id="src/ErriezOregonTHN128Receive.h" name="src/ErriezOregonTHN128Receive.h">
-<area shape="rect" id="node1" title="Oregon THN128 433MHz temperature receive library for Arduino." alt="" coords="5,5,251,32"/>
-<area shape="rect" id="node2" href="$_erriez_oregon_t_h_n128_receive_8c.html" title="Oregon THN128 433MHz temperature transmit/receive library for Arduino." alt="" coords="6,80,250,107"/>
+<area shape="rect" id="Node000001" title="Oregon THN128 433MHz temperature receive library for Arduino." alt="" coords="5,5,251,31"/>
+<area shape="rect" id="Node000002" href="$_erriez_oregon_t_h_n128_receive_8c.html" title="Oregon THN128 433MHz temperature transmit/receive library for Arduino." alt="" coords="6,79,250,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,44,131,79,125,79,125,44"/>
 </map>

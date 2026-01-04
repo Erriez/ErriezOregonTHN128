@@ -1,6 +1,10 @@
 <map id="src/ErriezOregonTHN128Receive.h" name="src/ErriezOregonTHN128Receive.h">
-<area shape="rect" id="node1" title="Oregon THN128 433MHz temperature receive library for Arduino." alt="" coords="5,5,251,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="42,155,113,181"/>
-<area shape="rect" id="node3" href="$_erriez_oregon_t_h_n128_8h_source.html" title=" " alt="" coords="104,80,275,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="148,155,231,181"/>
+<area shape="rect" id="Node000001" title="Oregon THN128 433MHz temperature receive library for Arduino." alt="" coords="5,5,251,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="42,152,113,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,32,107,54,94,80,86,110,82,139,77,138,81,109,90,78,103,51,117,29"/>
+<area shape="rect" id="Node000003" href="$_erriez_oregon_t_h_n128_8h_source.html" title=" " alt="" coords="104,79,275,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,29,172,66,168,70,136,33"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="173,106,109,147,106,142,170,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="148,152,231,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="192,104,192,138,187,138,187,104"/>
 </map>

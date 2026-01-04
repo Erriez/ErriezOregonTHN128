@@ -1,8 +1,14 @@
 <map id="src/ErriezOregonTHN128Receive.c" name="src/ErriezOregonTHN128Receive.c">
-<area shape="rect" id="node1" title="Oregon THN128 433MHz temperature transmit/receive library for Arduino." alt="" coords="13,5,257,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,89,107"/>
-<area shape="rect" id="node3" href="$_erriez_oregon_t_h_n128_receive_8h.html" title="Oregon THN128 433MHz temperature receive library for Arduino." alt="" coords="113,80,336,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="139,229,209,256"/>
-<area shape="rect" id="node5" href="$_erriez_oregon_t_h_n128_8h_source.html" title=" " alt="" coords="201,155,371,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="245,229,327,256"/>
+<area shape="rect" id="Node000001" title="Oregon THN128 433MHz temperature transmit/receive library for Arduino." alt="" coords="13,5,257,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,89,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,33,74,72,71,68,120,29"/>
+<area shape="rect" id="Node000003" href="$_erriez_oregon_t_h_n128_receive_8h.html" title="Oregon THN128 433MHz temperature receive library for Arduino." alt="" coords="113,79,336,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,29,201,68,198,72,148,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="139,225,209,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,106,204,127,191,153,183,183,179,212,173,211,178,182,186,151,199,124,214,103"/>
+<area shape="rect" id="Node000005" href="$_erriez_oregon_t_h_n128_8h_source.html" title=" " alt="" coords="201,152,371,177"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="237,103,269,140,265,143,233,106"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="269,180,206,220,203,215,267,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="245,225,327,251"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="289,178,289,212,283,212,283,178"/>
 </map>

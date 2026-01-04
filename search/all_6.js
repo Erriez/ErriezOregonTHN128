@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['rawdata_27',['rawData',['../struct_oregon_t_h_n128_data__t.html#a85bc7d44faf00454da49d551d195ef22',1,'OregonTHN128Data_t']]],
-  ['rfpinchange_28',['rfPinChange',['../_erriez_oregon_t_h_n128_receive_8c.html#a43a2b8fc8faad3d8eb7865c28f372411',1,'ErriezOregonTHN128Receive.c']]],
-  ['rollingaddress_29',['rollingAddress',['../struct_oregon_t_h_n128_data__t.html#a790df24d24110b6dd239cbec9a034af7',1,'OregonTHN128Data_t']]],
-  ['rxstate_5ft_30',['RxState_t',['../_erriez_oregon_t_h_n128_receive_8c.html#a9d623cb96aa9f529c7ce57bf8397345d',1,'ErriezOregonTHN128Receive.c']]]
+  ['get_5fchannel_0',['GET_CHANNEL',['../group___bit.html#gac7780b6c2efd7d05421f64149330d43c',1,'ErriezOregonTHN128.c']]],
+  ['get_5fcrc_1',['GET_CRC',['../group___bit.html#ga340577f0a5c7ef68bca4300b7b9c2dd8',1,'ErriezOregonTHN128.c']]],
+  ['get_5frol_5faddr_2',['GET_ROL_ADDR',['../group___bit.html#gaf4b9c9ad444458f8ab0d4dbd82c2941b',1,'ErriezOregonTHN128.c']]],
+  ['get_5ftemp_3',['GET_TEMP',['../group___bit.html#ga136c20c4e4312d1e6614def3b4de9b6c',1,'ErriezOregonTHN128.c']]]
 ];
